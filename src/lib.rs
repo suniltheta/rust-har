@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 /// Implements struct hierarchy and serializer for the [HAR 1.2 spec][1].
 ///
 /// [1]: http://www.softwareishard.com/blog/har-12-spec/
@@ -13,7 +12,7 @@ const HAR_CREATOR_VERSION: &'static str = "0.0.1";
 /// This object represents the root of the exported data.
 ///
 /// This object MUST be present and its name MUST be "log".
-struct Log {
+pub struct Log {
     /// Version number of the format.
     version: String,
 
@@ -35,7 +34,7 @@ struct Log {
 }
 
 impl Log {
-    fn new() -> Log {
+    pub fn new() -> Log {
         Log {
             version: HAR_VERSION.to_string(),
             creator: Creator {
@@ -79,7 +78,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Log {
 }
 
 /// This object contains information about the log creator application.
-struct Creator {
+pub struct Creator {
     name: String,
     version: String,
     comment: Option<String>
@@ -105,7 +104,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Creator {
 
 
 /// This object contains information about the browser that created the log.
-struct Browser {
+pub struct Browser {
     name: String,
     version: String,
     comment: Option<String>
@@ -131,7 +130,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Browser {
 
 
 /// This object represents list of exported pages.
-struct Page {
+pub struct Page {
     /// Date and time stamp for the beginning of the page load
     /// (ISO 8601 YYYY-MM-DDThh:mm:ss.sTZD, e.g. 2009-07-24T19:20:30.45+01:00).
     started_date_time: String,
@@ -170,7 +169,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Page {
 ///
 /// All times are specified in milliseconds.
 /// If a time info is not available appropriate field is set to -1.
-struct PageTimings {
+pub struct PageTimings {
     /// Content of the page loaded.
     /// Number of milliseconds since page load started (page.startedDateTime).
     /// Use -1 if the timing does not apply to the current request.
@@ -208,7 +207,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
 /// startedDateTime (starting from the oldest) is preferred way how to export data since it can
 /// make importing faster. However the reader application should always make sure the array is
 /// sorted (if required for the import).
-struct Entry {
+pub struct Entry {
     /// Reference to the parent page (unique).
     /// Leave out this field if the application does not support grouping by pages.
     pageref: Option<String>,
@@ -294,7 +293,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
 }
 
 /// This object contains detailed info about performed request.
-struct Request {
+pub struct Request {
     /// Request method (GET, POST, ...).
     method: String,
 
@@ -359,7 +358,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
 }
 
 /// This object contains detailed info about the response.
-struct Response {
+pub struct Response {
     /// Response status.
     status: int,
 
@@ -426,7 +425,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Response {
 
 
 /// This object contains list of all cookies (used in <request> and <response> objects).
-struct Cookie {
+pub struct Cookie {
     /// The name of the cookie.
     name: String,
 
@@ -492,7 +491,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cookie {
 
 
 /// This object contains list of all headers (used in <request> and <response> objects).
-struct Header {
+pub struct Header {
     name: String,
     value: String,
     comment: Option<String>
@@ -520,7 +519,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Header {
 /// This object contains list of all parameters & values parsed from a query string, if any
 /// (embedded in <request> object).
 /// HAR format expects NVP (name-value pairs) formatting of the query string.
-struct QueryStringPair {
+pub struct QueryStringPair {
     name: String,
     value: String,
     comment: Option<String>
@@ -547,7 +546,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for QueryStringPair {
 
 /// This object describes posted data, if any (embedded in <request> object).
 /// Note that text and params fields are mutually exclusive.
-struct PostData {
+pub struct PostData {
     /// Mime type of posted data.
     mime_type: String,
 
@@ -582,7 +581,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PostData {
 
 
 /// List of posted parameters, if any (embedded in <postData> object).
-struct Param {
+pub struct Param {
     /// name of a posted parameter.
     name: String,
 
@@ -636,7 +635,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Param {
 /// trans-coded from its original character set into UTF-8. Additionally, it can be encoded using
 /// e.g. base64. Ideally, the application should be able to unencode a base64 blob and get a
 /// byte-for-byte identical resource to what the browser operated on.
-struct Content {
+pub struct Content {
     /// Length of the returned content in bytes.
     /// Should be equal to response.bodySize if there is no compression and bigger when the content
     /// has been compressed.
@@ -697,7 +696,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Content {
 
 
 /// This objects contains info about a request coming from browser cache.
-struct Cache {
+pub struct Cache {
     /// State of a cache entry before the request.
     /// Leave out this field if the information is not available.
     before_request: CacheState,
@@ -742,13 +741,13 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cache {
 ///
 /// Can be Absent, Present, or Unknown. When serialized, these result in (respectively) `null`, a
 /// CacheEntry value, or no object.
-enum CacheState {
+pub enum CacheState {
     Absent,
     Present(CacheEntry),
     Unknown
 }
 
-struct CacheEntry {
+pub struct CacheEntry {
     /// Expiration time of the cache entry.
     expires: Option<String>,
 
@@ -791,7 +790,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
 /// A timing value which may be absent or present
 ///
 /// Defaults to -1 in the absent case.
-enum OptionalTiming {
+pub enum OptionalTiming {
     TimedContent(uint),
     NotApplicable
 }
@@ -812,7 +811,7 @@ enum OptionalTiming {
 /// entry.time == entry.timings.blocked + entry.timings.dns +
 ///     entry.timings.connect + entry.timings.send + entry.timings.wait +
 ///         entry.timings.receive;
-struct Timing {
+pub struct Timing {
     /// Time spent in a queue waiting for a network connection.
     /// Use -1 if the timing does not apply to the current request.
     blocked: OptionalTiming,
@@ -888,7 +887,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
 #[cfg(test)]
 mod test {
     use serialize::json;
-    use Browser;
+    // use Browser;
     use Cache;
     use CacheState::{Absent,Present,Unknown};
     use CacheEntry;
