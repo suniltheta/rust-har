@@ -1929,13 +1929,13 @@ mod test {
             comment: Some("Comment".to_string()),
         };
         let timing_json = "{
-                                \"blocked\": 1, 
-                                \"dns\": 2, 
-                                \"connect\": 3, 
-                                \"send\": 4, 
+                                \"blocked\": 1,
+                                \"dns\": 2,
+                                \"connect\": 3,
+                                \"send\": 4,
                                 \"wait\": 5,
-                                \"receive\": 6, 
-                                \"ssl\": 7, 
+                                \"receive\": 6,
+                                \"ssl\": 7,
                                 \"comment\":\"Comment\"
                            }";
         assert_eq!(json::from_str(timing_json),
