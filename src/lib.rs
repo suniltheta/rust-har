@@ -249,6 +249,7 @@ struct Entry {
 
 impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
+        use OptionalTiming::{TimedContent,NotApplicable};
         encoder.emit_struct("Entry", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             match self.pageref {
@@ -256,12 +257,15 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
                 None => ()
             }
             fields.push(("startedDateTime", box self.started_date_time.to_string()));
-            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as int;
+            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as uint;
             for timing in vec![self.timings.blocked,
                                self.timings.dns,
                                self.timings.connect,
                                self.timings.ssl].iter() {
-                time += timing.unwrap_or(0i);
+                time += match *timing {
+                    TimedContent(time) => time,
+                    NotApplicable => 0u
+                }
             }
             fields.push(("time", box time));
             fields.push(("request", box &self.request));
@@ -693,7 +697,6 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Content {
 
 
 /// This objects contains info about a request coming from browser cache.
-/// TODO: the requests can be absent, null, or present
 struct Cache {
     /// State of a cache entry before the request.
     /// Leave out this field if the information is not available.
@@ -785,6 +788,13 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
     }
 }
 
+/// A timing value which may be absent or present
+///
+/// Defaults to -1 in the absent case.
+enum OptionalTiming {
+    TimedContent(uint),
+    NotApplicable
+}
 
 /// This object describes various phases within request-response round trip. All times are
 /// specified in milliseconds.
@@ -805,15 +815,15 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
 struct Timing {
     /// Time spent in a queue waiting for a network connection.
     /// Use -1 if the timing does not apply to the current request.
-    blocked: Option<int>,
+    blocked: OptionalTiming,
 
     /// DNS resolution time. The time required to resolve a host name.
     /// Use -1 if the timing does not apply to the current request.
-    dns: Option<int>,
+    dns: OptionalTiming,
 
     /// Time required to create TCP connection.
     /// Use -1 if the timing does not apply to the current request.
-    connect: Option<int>,
+    connect: OptionalTiming,
 
     /// Time required to send HTTP request to the server.
     send: uint,
@@ -828,7 +838,7 @@ struct Timing {
     /// If this field is defined then the time is also included in the connect field (to ensure
     /// backward compatibility with HAR 1.1).
     /// Use -1 if the timing does not apply to the current request.
-    ssl: Option<int>,
+    ssl: OptionalTiming,
 
     /// (new in 1.2) - A comment provided by the user or the application.
     comment: Option<String>
@@ -836,16 +846,33 @@ struct Timing {
 
 impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
+        use OptionalTiming::{TimedContent,NotApplicable};
         encoder.emit_struct("Timing", 0, |encoder| {
             let default_int = -1i;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("blocked", box self.blocked.unwrap_or(default_int)));
-            fields.push(("dns", box self.dns.unwrap_or(default_int)));
-            fields.push(("connect", box self.connect.unwrap_or(default_int)));
+            fields.push(("blocked", box
+            match self.blocked {
+                TimedContent(time) => time as int,
+                NotApplicable => default_int
+            }));
+            fields.push(("dns", box
+            match self.dns {
+                TimedContent(time) => time as int,
+                NotApplicable => default_int
+            }));
+            fields.push(("connect", box
+            match self.connect {
+                TimedContent(time) => time as int,
+                NotApplicable => default_int
+            }));
             fields.push(("send", box self.send));
             fields.push(("wait", box self.wait));
             fields.push(("receive", box self.receive));
-            fields.push(("ssl", box self.ssl.unwrap_or(default_int)));
+            fields.push(("ssl", box
+            match self.ssl {
+                TimedContent(time) => time as int,
+                NotApplicable => default_int
+            }));
             match self.comment {
                 Some(ref comment) => fields.push(("comment", box comment.to_string())),
                 None => ()
@@ -871,6 +898,7 @@ mod test {
     use Entry;
     use Header;
     use Log;
+    use OptionalTiming::{TimedContent,NotApplicable};
     use Page;
     use PageTimings;
     use Param;
@@ -941,13 +969,13 @@ mod test {
                 comment: None
             },
             timings: Timing {
-                blocked: None,
-                dns: None,
-                connect: None,
+                blocked: NotApplicable,
+                dns: NotApplicable,
+                connect: NotApplicable,
                 send: 4,
                 wait: 5,
                 receive: 6,
-                ssl: None,
+                ssl: NotApplicable,
                 comment: None,
             },
             server_ip_address: None,
@@ -1226,13 +1254,13 @@ mod test {
                 comment: None
             },
             timings: Timing {
-                blocked: Some(1),
-                dns: Some(2),
-                connect: Some(3),
+                blocked: TimedContent(1),
+                dns: TimedContent(2),
+                connect: TimedContent(3),
                 send: 4,
                 wait: 5,
                 receive: 6,
-                ssl: Some(7),
+                ssl: TimedContent(7),
                 comment: None,
             },
             server_ip_address: Some("10.0.0.1".to_string()),
@@ -1327,13 +1355,13 @@ mod test {
                 comment: None
             },
             timings: Timing {
-                blocked: None,
-                dns: None,
-                connect: None,
+                blocked: NotApplicable,
+                dns: NotApplicable,
+                connect: NotApplicable,
                 send: 4,
                 wait: 5,
                 receive: 6,
-                ssl: None,
+                ssl: NotApplicable,
                 comment: None,
             },
             server_ip_address: None,
@@ -1891,13 +1919,13 @@ mod test {
     #[test]
     fn test_timing() {
         let timing = Timing {
-            blocked: Some(1),
-            dns: Some(2),
-            connect: Some(3),
+            blocked: TimedContent(1),
+            dns: TimedContent(2),
+            connect: TimedContent(3),
             send: 4,
             wait: 5,
             receive: 6,
-            ssl: Some(7),
+            ssl: TimedContent(7),
             comment: Some("Comment".to_string()),
         };
         let timing_json = "{
@@ -1917,13 +1945,13 @@ mod test {
     #[test]
     fn test_timing_no_optional() {
         let timing = Timing {
-            blocked: None,
-            dns: None,
-            connect: None,
+            blocked: NotApplicable,
+            dns: NotApplicable,
+            connect: NotApplicable,
             send: 4,
             wait: 5,
             receive: 6,
-            ssl: None,
+            ssl: NotApplicable,
             comment: None,
         };
         let timing_json = "{
