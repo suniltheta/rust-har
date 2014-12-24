@@ -887,7 +887,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
 #[cfg(test)]
 mod test {
     use serialize::json;
-    // use Browser;
+    use Browser;
     use Cache;
     use CacheState::{Absent,Present,Unknown};
     use CacheEntry;
