@@ -70,7 +70,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Log {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -95,7 +95,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Creator {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -121,7 +121,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Browser {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -157,7 +157,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Page {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -196,7 +196,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -285,7 +285,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -350,7 +350,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -416,7 +416,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Response {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -482,7 +482,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cookie {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -508,7 +508,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Header {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -536,7 +536,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for QueryStringPair {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -572,7 +572,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PostData {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -621,7 +621,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Param {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -687,7 +687,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Content {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -729,7 +729,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cache {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -780,7 +780,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
@@ -877,7 +877,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (*value).encode(encoder)));
+                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
             }
             Ok(())
         })
