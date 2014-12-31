@@ -121,6 +121,16 @@ pub struct Browser {
     comment: Option<String>
 }
 
+impl Browser {
+    pub fn new(name: String, version: String, comment: Option<String>) -> Browser{
+        Browser {
+            name: name,
+            version: version,
+            comment: comment
+        }
+    }
+}
+
 impl <S: Encoder<E>, E> Encodable<S, E> for Browser {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Browser", 0, |encoder| {
@@ -921,11 +931,7 @@ mod test {
     #[test]
     fn test_log() {
         let mut log = Log::new(
-            Some(Browser {
-                name: "Firefox".to_string(),
-                version: "3.6".to_string(),
-                comment: None
-            }),
+            Some(Browser::new("Firefox".to_string(), "3.6".to_string(), None)),
             Some("Comment".to_string())
         );
         log.add_page(Page {
@@ -1108,11 +1114,8 @@ mod test {
 
     #[test]
     fn test_browser() {
-        let browser = Browser {
-            name: "Firefox".to_string(),
-            version: "3.6".to_string(),
-            comment: Some("Comment".to_string())
-        };
+        let browser = Browser::new("Firefox".to_string(), "3.6".to_string(),
+                                   Some("Comment".to_string()));
         let browser_json = "{
                                 \"name\": \"Firefox\",
                                 \"version\": \"3.6\",
@@ -1124,11 +1127,7 @@ mod test {
 
     #[test]
     fn test_browser_no_optional() {
-        let browser = Browser {
-            name: "Firefox".to_string(),
-            version: "3.6".to_string(),
-            comment: None
-        };
+        let browser = Browser::new("Firefox".to_string(), "3.6".to_string(), None);
         let browser_json = "{
                                 \"name\": \"Firefox\",
                                 \"version\": \"3.6\"
