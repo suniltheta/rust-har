@@ -165,6 +165,22 @@ pub struct Page {
     comment: Option<String>
 }
 
+impl Page {
+    pub fn new(started_date_time: String,
+               id: String,
+               title: String,
+               page_timings: PageTimings,
+               comment: Option<String>) -> Page {
+        Page {
+            started_date_time: started_date_time,
+            id: id,
+            title: title,
+            page_timings: page_timings,
+            comment: comment
+        }
+    }
+}
+
 impl <S: Encoder<E>, E> Encodable<S, E> for Page {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Page", 0, |encoder| {
@@ -948,13 +964,13 @@ mod test {
             Some(Browser::new("Firefox".to_string(), "3.6".to_string(), None)),
             Some("Comment".to_string())
         );
-        log.add_page(Page {
-            started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
-            id: "page_0".to_string(),
-            title: "Test Page".to_string(),
-            page_timings: PageTimings::new(None, None, None),
-            comment: None
-        });
+        log.add_page(Page::new(
+            "2009-04-16T12:07:25.123+01:00".to_string(),
+            "page_0".to_string(),
+            "Test Page".to_string(),
+            PageTimings::new(None, None, None),
+            None
+        ));
         log.add_entry(Entry {
             pageref: Some("page_0".to_string()),
             started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
@@ -1148,13 +1164,13 @@ mod test {
 
     #[test]
     fn test_page() {
-        let page = Page {
-            started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
-            id: "page_0".to_string(),
-            title: "Test Page".to_string(),
-            page_timings: PageTimings::new(None, None, None),
-            comment: Some("Comment".to_string())
-        };
+        let page = Page::new(
+            "2009-04-16T12:07:25.123+01:00".to_string(),
+            "page_0".to_string(),
+            "Test Page".to_string(),
+            PageTimings::new(None, None, None),
+            Some("Comment".to_string())
+        );
         let page_json = "{
                              \"startedDateTime\": \"2009-04-16T12:07:25.123+01:00\",
                              \"id\": \"page_0\",
@@ -1171,13 +1187,13 @@ mod test {
 
     #[test]
     fn test_page_no_optional() {
-        let page = Page {
-            started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
-            id: "page_0".to_string(),
-            title: "Test Page".to_string(),
-            page_timings: PageTimings::new(None, None, None),
-            comment: None
-        };
+        let page = Page::new(
+            "2009-04-16T12:07:25.123+01:00".to_string(),
+            "page_0".to_string(),
+            "Test Page".to_string(),
+            PageTimings::new(None, None, None),
+            None
+        );
         let page_json = "{
                              \"startedDateTime\": \"2009-04-16T12:07:25.123+01:00\",
                              \"id\": \"page_0\",
