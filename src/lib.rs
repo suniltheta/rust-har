@@ -205,6 +205,20 @@ pub struct PageTimings {
     comment: Option<String>
 }
 
+impl PageTimings {
+    pub fn new(
+        on_content_load: Option<int>,
+        on_load: Option<int>,
+        comment: Option<String>
+    ) -> PageTimings {
+        PageTimings {
+            on_content_load: on_content_load,
+            on_load: on_load,
+            comment: comment,
+        }
+    }
+}
+
 impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("PageTimings", 0, |encoder| {
@@ -938,11 +952,7 @@ mod test {
             started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
             id: "page_0".to_string(),
             title: "Test Page".to_string(),
-            page_timings: PageTimings {
-                on_content_load: None,
-                on_load: None,
-                comment: None
-            },
+            page_timings: PageTimings::new(None, None, None),
             comment: None
         });
         log.add_entry(Entry {
@@ -1142,11 +1152,7 @@ mod test {
             started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
             id: "page_0".to_string(),
             title: "Test Page".to_string(),
-            page_timings: PageTimings {
-                on_content_load: None,
-                on_load: None,
-                comment: None,
-            },
+            page_timings: PageTimings::new(None, None, None),
             comment: Some("Comment".to_string())
         };
         let page_json = "{
@@ -1169,11 +1175,7 @@ mod test {
             started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
             id: "page_0".to_string(),
             title: "Test Page".to_string(),
-            page_timings: PageTimings {
-                on_content_load: None,
-                on_load: None,
-                comment: None,
-            },
+            page_timings: PageTimings::new(None, None, None),
             comment: None
         };
         let page_json = "{
@@ -1191,11 +1193,7 @@ mod test {
 
     #[test]
     fn test_page_timings() {
-        let page_timings = PageTimings {
-            on_content_load: Some(1720),
-            on_load: Some(2500),
-            comment: Some("Comment".to_string())
-        };
+        let page_timings = PageTimings::new(Some(1720), Some(2500), Some("Comment".to_string()));
         let page_timings_json = "{
                                      \"onContentLoad\": 1720,
                                      \"onLoad\": 2500,
@@ -1207,11 +1205,7 @@ mod test {
 
     #[test]
     fn test_page_timings_no_optional() {
-        let page_timings = PageTimings {
-            on_content_load: None,
-            on_load: None,
-            comment: None,
-        };
+        let page_timings = PageTimings::new(None, None, None);
         let page_timings_json = "{
                                      \"onContentLoad\": -1,
                                      \"onLoad\": -1
