@@ -55,6 +55,10 @@ impl Log {
             None => self.pages = Some(vec![page])
         }
     }
+
+    pub fn add_entry(&mut self, entry: Entry) {
+        self.entries.push(entry);
+    }
 }
 
 impl <S: Encoder<E>, E> Encodable<S, E> for Log {
@@ -933,7 +937,7 @@ mod test {
             },
             comment: None
         });
-        log.entries.push(Entry {
+        log.add_entry(Entry {
             pageref: Some("page_0".to_string()),
             started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
             request: Request {
