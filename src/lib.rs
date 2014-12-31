@@ -34,7 +34,7 @@ pub struct Log {
 }
 
 impl Log {
-    pub fn new() -> Log {
+    pub fn new(browser: Option<Browser>, comment: Option<String>) -> Log {
         Log {
             version: HAR_VERSION.to_string(),
             creator: Creator {
@@ -42,10 +42,10 @@ impl Log {
                 version: HAR_CREATOR_VERSION.to_string(),
                 comment: None
             },
-            browser: None,
+            browser: browser,
             pages: None,
             entries: Vec::new(),
-            comment: None
+            comment: comment
         }
     }
 
@@ -920,12 +920,14 @@ mod test {
 
     #[test]
     fn test_log() {
-        let mut log = Log::new();
-        log.browser = Some(Browser {
-            name: "Firefox".to_string(),
-            version: "3.6".to_string(),
-            comment: None
-        });
+        let mut log = Log::new(
+            Some(Browser {
+                name: "Firefox".to_string(),
+                version: "3.6".to_string(),
+                comment: None
+            }),
+            Some("Comment".to_string())
+        );
         log.add_page(Page {
             started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
             id: "page_0".to_string(),
@@ -990,7 +992,6 @@ mod test {
             connection: None,
             comment: None
         });
-        log.comment = Some("Comment".to_string());
         let log_json = "{
                             \"version\": \"1.2\",
                             \"creator\": {
@@ -1061,7 +1062,7 @@ mod test {
 
     #[test]
     fn test_log_no_optional() {
-        let log = Log::new();
+        let log = Log::new(None, None);
         let log_json = "{
                             \"version\": \"1.2\",
                             \"creator\": {
