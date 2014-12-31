@@ -48,6 +48,13 @@ impl Log {
             comment: None
         }
     }
+
+    pub fn add_page(&mut self, page: Page) {
+        match self.pages {
+            Some(ref mut pages) => pages.push(page),
+            None => self.pages = Some(vec![page])
+        }
+    }
 }
 
 impl <S: Encoder<E>, E> Encodable<S, E> for Log {
@@ -915,19 +922,17 @@ mod test {
             version: "3.6".to_string(),
             comment: None
         });
-        log.pages = Some(vec![
-            Page {
-                started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
-                id: "page_0".to_string(),
-                title: "Test Page".to_string(),
-                page_timings: PageTimings {
-                    on_content_load: None,
-                    on_load: None,
-                    comment: None
-                },
+        log.add_page(Page {
+            started_date_time: "2009-04-16T12:07:25.123+01:00".to_string(),
+            id: "page_0".to_string(),
+            title: "Test Page".to_string(),
+            page_timings: PageTimings {
+                on_content_load: None,
+                on_load: None,
                 comment: None
-            }
-        ]);
+            },
+            comment: None
+        });
         log.entries.push(Entry {
             pageref: Some("page_0".to_string()),
             started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
