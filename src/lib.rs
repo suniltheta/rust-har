@@ -7,7 +7,7 @@ use serialize::{Encodable, Encoder};
 
 const HAR_VERSION: &'static str = "1.2";
 const HAR_CREATOR_NAME: &'static str = "Rust-HAR";
-const HAR_CREATOR_VERSION: &'static str = "0.0.1";
+const HAR_CREATOR_VERSION: &'static str = "0.0.2";
 
 /// This object represents the root of the exported data.
 ///
