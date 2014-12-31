@@ -1002,7 +1002,7 @@ mod test {
                             \"version\": \"1.2\",
                             \"creator\": {
                                 \"name\": \"Rust-HAR\",
-                                \"version\": \"0.0.1\"
+                                \"version\": \"0.0.2\"
                             },
                             \"browser\": {
                                 \"name\": \"Firefox\",
@@ -1073,7 +1073,7 @@ mod test {
                             \"version\": \"1.2\",
                             \"creator\": {
                                 \"name\": \"Rust-HAR\",
-                                \"version\": \"0.0.1\"
+                                \"version\": \"0.0.2\"
                             },
                             \"entries\": []
                         }";
