@@ -210,12 +210,12 @@ pub struct PageTimings {
     /// Content of the page loaded.
     /// Number of milliseconds since page load started (page.startedDateTime).
     /// Use -1 if the timing does not apply to the current request.
-    on_content_load: Option<int>,
+    on_content_load: OptionalTiming,
 
     /// Page is loaded (onLoad event fired).
     /// Number of milliseconds since page load started (page.startedDateTime).
     /// Use -1 if the timing does not apply to the current request.
-    on_load: Option<int>,
+    on_load: OptionalTiming,
 
     /// A comment provided by the user or the application.
     comment: Option<String>
@@ -223,8 +223,8 @@ pub struct PageTimings {
 
 impl PageTimings {
     pub fn new(
-        on_content_load: Option<int>,
-        on_load: Option<int>,
+        on_content_load: OptionalTiming,
+        on_load: OptionalTiming,
         comment: Option<String>
     ) -> PageTimings {
         PageTimings {
@@ -238,10 +238,9 @@ impl PageTimings {
 impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("PageTimings", 0, |encoder| {
-            let default_int = -1i;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("onContentLoad", box self.on_content_load.unwrap_or(default_int)));
-            fields.push(("onLoad", box self.on_load.unwrap_or(default_int)));
+            fields.push(("onContentLoad", box self.on_content_load));
+            fields.push(("onLoad", box self.on_load));
             match self.comment {
                 Some(ref comment) => fields.push(("comment", box comment.to_string())),
                 None => ()
@@ -964,7 +963,7 @@ mod test {
             "2009-04-16T12:07:25.123+01:00".to_string(),
             "page_0".to_string(),
             "Test Page".to_string(),
-            PageTimings::new(None, None, None),
+            PageTimings::new(NotApplicable, NotApplicable, None),
             None
         ));
         log.add_entry(Entry {
@@ -1164,7 +1163,7 @@ mod test {
             "2009-04-16T12:07:25.123+01:00".to_string(),
             "page_0".to_string(),
             "Test Page".to_string(),
-            PageTimings::new(None, None, None),
+            PageTimings::new(NotApplicable, NotApplicable, None),
             Some("Comment".to_string())
         );
         let page_json = "{
@@ -1187,7 +1186,7 @@ mod test {
             "2009-04-16T12:07:25.123+01:00".to_string(),
             "page_0".to_string(),
             "Test Page".to_string(),
-            PageTimings::new(None, None, None),
+            PageTimings::new(NotApplicable, NotApplicable, None),
             None
         );
         let page_json = "{
@@ -1205,7 +1204,9 @@ mod test {
 
     #[test]
     fn test_page_timings() {
-        let page_timings = PageTimings::new(Some(1720), Some(2500), Some("Comment".to_string()));
+        let page_timings = PageTimings::new(TimedContent(1720),
+                                            TimedContent(2500),
+                                            Some("Comment".to_string()));
         let page_timings_json = "{
                                      \"onContentLoad\": 1720,
                                      \"onLoad\": 2500,
@@ -1217,7 +1218,7 @@ mod test {
 
     #[test]
     fn test_page_timings_no_optional() {
-        let page_timings = PageTimings::new(None, None, None);
+        let page_timings = PageTimings::new(NotApplicable, NotApplicable, None);
         let page_timings_json = "{
                                      \"onContentLoad\": -1,
                                      \"onLoad\": -1
