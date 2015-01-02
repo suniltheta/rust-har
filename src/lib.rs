@@ -7,7 +7,7 @@ use serialize::{Encodable, Encoder};
 
 const HAR_VERSION: &'static str = "1.2";
 const HAR_CREATOR_NAME: &'static str = "Rust-HAR";
-const HAR_CREATOR_VERSION: &'static str = "0.0.3";
+const HAR_CREATOR_VERSION: &'static str = "0.0.4";
 
 /// This object represents the root of the exported data.
 ///
@@ -1023,7 +1023,7 @@ mod test {
                             \"version\": \"1.2\",
                             \"creator\": {
                                 \"name\": \"Rust-HAR\",
-                                \"version\": \"0.0.3\"
+                                \"version\": \"0.0.4\"
                             },
                             \"browser\": {
                                 \"name\": \"Firefox\",
@@ -1094,7 +1094,7 @@ mod test {
                             \"version\": \"1.2\",
                             \"creator\": {
                                 \"name\": \"Rust-HAR\",
-                                \"version\": \"0.0.3\"
+                                \"version\": \"0.0.4\"
                             },
                             \"entries\": []
                         }";
