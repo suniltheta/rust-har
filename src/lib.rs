@@ -840,6 +840,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
 /// A timing value which may be absent or present
 ///
 /// Defaults to -1 in the absent case.
+#[deriving(Copy)]
 pub enum OptionalTiming {
     TimedContent(uint),
     NotApplicable
