@@ -846,6 +846,20 @@ pub enum OptionalTiming {
     NotApplicable
 }
 
+impl <S: Encoder<E>, E> Encodable<S, E> for OptionalTiming {
+    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+        use OptionalTiming::{TimedContent,NotApplicable};
+
+        let default_int = -1i;
+        let value = match *self {
+            TimedContent(value) => value as int,
+            NotApplicable => default_int
+        };
+        try!(encoder.emit_int(value));
+        Ok(())
+    }
+}
+
 /// This object describes various phases within request-response round trip. All times are
 /// specified in milliseconds.
 ///
@@ -896,33 +910,15 @@ pub struct Timing {
 
 impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
-        use OptionalTiming::{TimedContent,NotApplicable};
         encoder.emit_struct("Timing", 0, |encoder| {
-            let default_int = -1i;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("blocked", box
-            match self.blocked {
-                TimedContent(time) => time as int,
-                NotApplicable => default_int
-            }));
-            fields.push(("dns", box
-            match self.dns {
-                TimedContent(time) => time as int,
-                NotApplicable => default_int
-            }));
-            fields.push(("connect", box
-            match self.connect {
-                TimedContent(time) => time as int,
-                NotApplicable => default_int
-            }));
+            fields.push(("blocked", box self.blocked));
+            fields.push(("dns", box self.dns));
+            fields.push(("connect", box self.connect));
             fields.push(("send", box self.send));
             fields.push(("wait", box self.wait));
             fields.push(("receive", box self.receive));
-            fields.push(("ssl", box
-            match self.ssl {
-                TimedContent(time) => time as int,
-                NotApplicable => default_int
-            }));
+            fields.push(("ssl", box self.ssl));
             match self.comment {
                 Some(ref comment) => fields.push(("comment", box comment.to_string())),
                 None => ()
