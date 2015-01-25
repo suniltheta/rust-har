@@ -871,7 +871,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for OptionalTiming {
 ///
 /// An exporting tool can omit the blocked, dns, connect and ssl, timings on every request if it is
 /// unable to provide them. Tools that can provide these timings can set their values to -1 if they
-/// don’t apply. For example, connect would be -1 for requests which re-use an existing connection.
+/// don't apply. For example, connect would be -1 for requests which re-use an existing connection.
 ///
 /// The time value for the request must be equal to the sum of the timings supplied in this section
 /// (excluding any -1 values).
