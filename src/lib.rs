@@ -306,14 +306,14 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
                 None => ()
             }
             fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
-            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as uint;
+            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as usize;
             for timing in vec![self.timings.blocked,
                                self.timings.dns,
                                self.timings.connect,
                                self.timings.ssl].iter() {
                 time += match *timing {
                     TimedContent(time) => time,
-                    NotApplicable => 0u
+                    NotApplicable => 0us
                 }
             }
             fields.push(("time", Box::new(time)));
@@ -369,11 +369,11 @@ pub struct Request {
     /// Total number of bytes from the start of the HTTP request message until (and including)
     /// the double CRLF before the body.
     /// Set to -1 if the info is not available.
-    headers_size: Option<int>,
+    headers_size: Option<isize>,
 
     /// Size of the request body (POST data payload) in bytes.
     /// Set to -1 if the info is not available.
-    body_size: Option<int>,
+    body_size: Option<isize>,
 
     /// A comment provided by the user or the application.
     comment: Option<String>
@@ -382,7 +382,7 @@ pub struct Request {
 impl <S: Encoder<E>, E> Encodable<S, E> for Request {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Request", 0, |encoder| {
-            let default_int = -1i;
+            let default_isize = -1is;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             fields.push(("method", Box::new(self.method.to_string())));
             fields.push(("url", Box::new(self.url.to_string())));
@@ -394,8 +394,8 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
                 Some(ref post_data) => fields.push(("postData", Box::new(post_data))),
                 None => ()
             }
-            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_int))));
-            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_int))));
+            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_isize))));
+            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_isize))));
             match self.comment {
                 Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
@@ -411,7 +411,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
 /// This object contains detailed info about the response.
 pub struct Response {
     /// Response status.
-    status: int,
+    status: isize,
 
     /// Response status description.
     status_text: String,
@@ -437,12 +437,12 @@ pub struct Response {
     /// The size of received response-headers is computed only from headers that are really
     /// received from the server. Additional headers appended by the browser are not included in
     /// this number, but they appear in the list of header objects.
-    headers_size: Option<int>,
+    headers_size: Option<isize>,
 
     /// Size of the received response body in bytes.
     /// Set to zero in case of responses coming from the cache (304).
     /// Set to -1 if the info is not available.
-    body_size: Option<int>,
+    body_size: Option<isize>,
 
     /// A comment provided by the user or the application.
     comment: Option<String>
@@ -451,7 +451,7 @@ pub struct Response {
 impl <S: Encoder<E>, E> Encodable<S, E> for Response {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Response", 0, |encoder| {
-            let default_int = -1i;
+            let default_isize = -1is;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             fields.push(("status", Box::new(self.status)));
             fields.push(("statusText", Box::new(self.status_text.to_string())));
@@ -460,8 +460,8 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Response {
             fields.push(("headers", Box::new(self.headers.as_slice())));
             fields.push(("content", Box::new(&self.content)));
             fields.push(("redirectURL", Box::new(self.redirect_url.to_string())));
-            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_int))));
-            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_int))));
+            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_isize))));
+            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_isize))));
             match self.comment {
                 Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
@@ -690,10 +690,10 @@ pub struct Content {
     /// Length of the returned content in bytes.
     /// Should be equal to response.bodySize if there is no compression and bigger when the content
     /// has been compressed.
-    size: int,
+    size: isize,
 
     /// Number of bytes saved. Leave out this field if the information is not available.
-    compression: Option<int>,
+    compression: Option<isize>,
 
     /// MIME type of the response text (value of the Content-Type response header).
     /// The charset attribute of the MIME type is included (if available).
@@ -812,7 +812,7 @@ pub struct CacheEntry {
     e_tag: String,
 
     /// The number of times the cache entry has been opened.
-    hit_count: int,
+    hit_count: isize,
 
     /// (new in 1.2) A comment provided by the user or the application.
     comment: Option<String>,
@@ -846,7 +846,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
 /// Defaults to -1 in the absent case.
 #[deriving(Copy)]
 pub enum OptionalTiming {
-    TimedContent(uint),
+    TimedContent(usize),
     NotApplicable
 }
 
@@ -854,12 +854,12 @@ impl <S: Encoder<E>, E> Encodable<S, E> for OptionalTiming {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         use OptionalTiming::{TimedContent,NotApplicable};
 
-        let default_int = -1i;
+        let default_isize = -1is;
         let value = match *self {
-            TimedContent(value) => value as int,
-            NotApplicable => default_int
+            TimedContent(value) => value as isize,
+            NotApplicable => default_isize
         };
-        try!(encoder.emit_int(value));
+        try!(encoder.emit_isize(value));
         Ok(())
     }
 }
@@ -894,13 +894,13 @@ pub struct Timing {
     connect: OptionalTiming,
 
     /// Time required to send HTTP request to the server.
-    send: uint,
+    send: usize,
 
     /// Waiting for a response from the server.
-    wait: uint,
+    wait: usize,
 
     /// Time required to read entire response from the server (or cache).
-    receive: uint,
+    receive: usize,
 
     /// Time required for SSL/TLS negotiation.
     /// If this field is defined then the time is also included in the connect field (to ensure
