@@ -61,10 +61,10 @@ impl Log {
     }
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Log {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Log {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Log", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("version", Box::new(self.version.to_string())));
             fields.push(("creator", Box::new(&self.creator)));
             match self.browser {
@@ -95,10 +95,10 @@ pub struct Creator {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Creator {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Creator {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Creator", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             fields.push(("version", Box::new(self.version.to_string())));
             match self.comment {
@@ -131,10 +131,10 @@ impl Browser {
     }
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Browser {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Browser {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Browser", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             fields.push(("version", Box::new(self.version.to_string())));
             match self.comment {
@@ -181,10 +181,10 @@ impl Page {
     }
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Page {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Page {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Page", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
             fields.push(("id", Box::new(self.id.to_string())));
             fields.push(("title", Box::new(self.title.to_string())));
@@ -235,10 +235,10 @@ impl PageTimings {
     }
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for PageTimings {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("PageTimings", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("onContentLoad", Box::new(self.on_content_load)));
             fields.push(("onLoad", Box::new(self.on_load)));
             match self.comment {
@@ -296,11 +296,11 @@ pub struct Entry {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Entry {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         use OptionalTiming::{TimedContent,NotApplicable};
         encoder.emit_struct("Entry", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             match self.pageref {
                 Some(ref pageref) => fields.push(("pageref", Box::new(pageref.to_string()))),
                 None => ()
@@ -379,11 +379,11 @@ pub struct Request {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Request {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Request {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Request", 0, |encoder| {
             let default_isize = -1is;
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("method", Box::new(self.method.to_string())));
             fields.push(("url", Box::new(self.url.to_string())));
             fields.push(("httpVersion", Box::new(self.http_version.to_string())));
@@ -448,11 +448,11 @@ pub struct Response {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Response {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Response {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Response", 0, |encoder| {
             let default_isize = -1is;
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("status", Box::new(self.status)));
             fields.push(("statusText", Box::new(self.status_text.to_string())));
             fields.push(("httpVersion", Box::new(self.http_version.to_string())));
@@ -502,10 +502,10 @@ pub struct Cookie {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Cookie {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Cookie {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Cookie", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             fields.push(("value", Box::new(self.value.to_string())));
             match self.path {
@@ -548,10 +548,10 @@ pub struct Header {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Header {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Header {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Header", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             fields.push(("value", Box::new(self.value.to_string())));
             match self.comment {
@@ -576,10 +576,10 @@ pub struct QueryStringPair {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for QueryStringPair {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for QueryStringPair {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("QueryStringPair", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             fields.push(("value", Box::new(self.value.to_string())));
             match self.comment {
@@ -611,10 +611,10 @@ pub struct PostData {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for PostData {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for PostData {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("PostData", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("mimeType", Box::new(self.mime_type.to_string())));
             fields.push(("params", Box::new(self.params.as_slice())));
             fields.push(("text", Box::new(self.text.to_string())));
@@ -649,10 +649,10 @@ pub struct Param {
     comment: Option<String>,
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Param {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Param {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Param", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("name", Box::new(self.name.to_string())));
             match self.value {
                 Some(ref value) => fields.push(("value", Box::new(value.to_string()))),
@@ -715,10 +715,10 @@ pub struct Content {
     comment: Option<String>,
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Content {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Content {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Content", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("size", Box::new(self.size)));
             match self.compression {
                 Some(ref compression) => fields.push(("compression", Box::new(compression))),
@@ -759,12 +759,12 @@ pub struct Cache {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Cache {
+impl Encodable for Cache {
 
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         use CacheState::{Absent,Present,Unknown};
         encoder.emit_struct("Cache", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             match self.before_request {
                 Absent => fields.push(("beforeRequest", Box::new(None::<CacheEntry>))),
                 Present(ref before_request) =>
@@ -818,10 +818,10 @@ pub struct CacheEntry {
     comment: Option<String>,
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for CacheEntry {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("CacheEntry", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             match self.expires {
                 Some(ref expires) => fields.push(("expires", Box::new(expires.to_string()))),
                 None => ()
@@ -850,8 +850,8 @@ pub enum OptionalTiming {
     NotApplicable
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for OptionalTiming {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for OptionalTiming {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         use OptionalTiming::{TimedContent,NotApplicable};
 
         let default_isize = -1is;
@@ -912,10 +912,10 @@ pub struct Timing {
     comment: Option<String>
 }
 
-impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
-    fn encode(&self, encoder: &mut S) -> Result<(), E> {
+impl Encodable for Timing {
+    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
         encoder.emit_struct("Timing", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
+            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
             fields.push(("blocked", Box::new(self.blocked)));
             fields.push(("dns", Box::new(self.dns)));
             fields.push(("connect", Box::new(self.connect)));
