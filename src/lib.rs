@@ -65,19 +65,19 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Log {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Log", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("version", box self.version.to_string()));
-            fields.push(("creator", box &self.creator));
+            fields.push(("version", Box::new(self.version.to_string())));
+            fields.push(("creator", Box::new(&self.creator)));
             match self.browser {
-                Some(ref browser) => fields.push(("browser", box browser)),
+                Some(ref browser) => fields.push(("browser", Box::new(browser))),
                 None => ()
             }
             match self.pages {
-                Some(ref pages) => fields.push(("pages", box pages.as_slice())),
+                Some(ref pages) => fields.push(("pages", Box::new(pages.as_slice()))),
                 None => ()
             }
-            fields.push(("entries", box self.entries.as_slice()));
+            fields.push(("entries", Box::new(self.entries.as_slice())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -99,10 +99,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Creator {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Creator", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
-            fields.push(("version", box self.version.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
+            fields.push(("version", Box::new(self.version.to_string())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -135,10 +135,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Browser {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Browser", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
-            fields.push(("version", box self.version.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
+            fields.push(("version", Box::new(self.version.to_string())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -185,12 +185,12 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Page {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Page", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("startedDateTime", box self.started_date_time.to_string()));
-            fields.push(("id", box self.id.to_string()));
-            fields.push(("title", box self.title.to_string()));
-            fields.push(("pageTimings", box &self.page_timings));
+            fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
+            fields.push(("id", Box::new(self.id.to_string())));
+            fields.push(("title", Box::new(self.title.to_string())));
+            fields.push(("pageTimings", Box::new(&self.page_timings)));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -239,10 +239,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PageTimings {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("PageTimings", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("onContentLoad", box self.on_content_load));
-            fields.push(("onLoad", box self.on_load));
+            fields.push(("onContentLoad", Box::new(self.on_content_load)));
+            fields.push(("onLoad", Box::new(self.on_load)));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -302,10 +302,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
         encoder.emit_struct("Entry", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             match self.pageref {
-                Some(ref pageref) => fields.push(("pageref", box pageref.to_string())),
+                Some(ref pageref) => fields.push(("pageref", Box::new(pageref.to_string()))),
                 None => ()
             }
-            fields.push(("startedDateTime", box self.started_date_time.to_string()));
+            fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
             let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as uint;
             for timing in vec![self.timings.blocked,
                                self.timings.dns,
@@ -316,22 +316,23 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
                     NotApplicable => 0u
                 }
             }
-            fields.push(("time", box time));
-            fields.push(("request", box &self.request));
-            fields.push(("response", box &self.response));
-            fields.push(("cache", box &self.cache));
-            fields.push(("timings", box &self.timings));
+            fields.push(("time", Box::new(time)));
+            fields.push(("request", Box::new(&self.request)));
+            fields.push(("response", Box::new(&self.response)));
+            fields.push(("cache", Box::new(&self.cache)));
+            fields.push(("timings", Box::new(&self.timings)));
             match self.server_ip_address {
                 Some(ref server_ip_address) =>
-                    fields.push(("serverIPAddress", box server_ip_address.to_string())),
+                    fields.push(("serverIPAddress", Box::new(server_ip_address.to_string()))),
                 None => ()
             }
             match self.connection {
-                Some(ref connection) => fields.push(("connection", box connection.to_string())),
+                Some(ref connection) =>
+                    fields.push(("connection", Box::new(connection.to_string()))),
                 None => ()
             }
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -383,20 +384,20 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
         encoder.emit_struct("Request", 0, |encoder| {
             let default_int = -1i;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("method", box self.method.to_string()));
-            fields.push(("url", box self.url.to_string()));
-            fields.push(("httpVersion", box self.http_version.to_string()));
-            fields.push(("cookies", box self.cookies.as_slice()));
-            fields.push(("headers", box self.headers.as_slice()));
-            fields.push(("queryString", box self.query_string.as_slice()));
+            fields.push(("method", Box::new(self.method.to_string())));
+            fields.push(("url", Box::new(self.url.to_string())));
+            fields.push(("httpVersion", Box::new(self.http_version.to_string())));
+            fields.push(("cookies", Box::new(self.cookies.as_slice())));
+            fields.push(("headers", Box::new(self.headers.as_slice())));
+            fields.push(("queryString", Box::new(self.query_string.as_slice())));
             match self.post_data {
-                Some(ref post_data) => fields.push(("postData", box post_data)),
+                Some(ref post_data) => fields.push(("postData", Box::new(post_data))),
                 None => ()
             }
-            fields.push(("headersSize", box self.headers_size.unwrap_or(default_int)));
-            fields.push(("bodySize", box self.body_size.unwrap_or(default_int)));
+            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_int))));
+            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_int))));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -452,17 +453,17 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Response {
         encoder.emit_struct("Response", 0, |encoder| {
             let default_int = -1i;
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("status", box self.status));
-            fields.push(("statusText", box self.status_text.to_string()));
-            fields.push(("httpVersion", box self.http_version.to_string()));
-            fields.push(("cookies", box self.cookies.as_slice()));
-            fields.push(("headers", box self.headers.as_slice()));
-            fields.push(("content", box &self.content));
-            fields.push(("redirectURL", box self.redirect_url.to_string()));
-            fields.push(("headersSize", box self.headers_size.unwrap_or(default_int)));
-            fields.push(("bodySize", box self.body_size.unwrap_or(default_int)));
+            fields.push(("status", Box::new(self.status)));
+            fields.push(("statusText", Box::new(self.status_text.to_string())));
+            fields.push(("httpVersion", Box::new(self.http_version.to_string())));
+            fields.push(("cookies", Box::new(self.cookies.as_slice())));
+            fields.push(("headers", Box::new(self.headers.as_slice())));
+            fields.push(("content", Box::new(&self.content)));
+            fields.push(("redirectURL", Box::new(self.redirect_url.to_string())));
+            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_int))));
+            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_int))));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -505,30 +506,30 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cookie {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Cookie", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
-            fields.push(("value", box self.value.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
+            fields.push(("value", Box::new(self.value.to_string())));
             match self.path {
-                Some(ref path) => fields.push(("path", box path.to_string())),
+                Some(ref path) => fields.push(("path", Box::new(path.to_string()))),
                 None => ()
             }
             match self.domain {
-                Some(ref domain) => fields.push(("domain", box domain.to_string())),
+                Some(ref domain) => fields.push(("domain", Box::new(domain.to_string()))),
                 None => ()
             }
             match self.expires {
-                Some(ref expires) => fields.push(("expires", box expires.to_string())),
+                Some(ref expires) => fields.push(("expires", Box::new(expires.to_string()))),
                 None => ()
             }
             match self.http_only {
-                Some(ref http_only) => fields.push(("httpOnly", box http_only)),
+                Some(ref http_only) => fields.push(("httpOnly", Box::new(http_only))),
                 None => ()
             }
             match self.secure {
-                Some(ref secure) => fields.push(("secure", box secure)),
+                Some(ref secure) => fields.push(("secure", Box::new(secure))),
                 None => ()
             }
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -551,10 +552,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Header {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Header", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
-            fields.push(("value", box self.value.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
+            fields.push(("value", Box::new(self.value.to_string())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -579,10 +580,10 @@ impl <S: Encoder<E>, E> Encodable<S, E> for QueryStringPair {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("QueryStringPair", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
-            fields.push(("value", box self.value.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
+            fields.push(("value", Box::new(self.value.to_string())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -614,11 +615,11 @@ impl <S: Encoder<E>, E> Encodable<S, E> for PostData {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("PostData", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("mimeType", box self.mime_type.to_string()));
-            fields.push(("params", box self.params.as_slice()));
-            fields.push(("text", box self.text.to_string()));
+            fields.push(("mimeType", Box::new(self.mime_type.to_string())));
+            fields.push(("params", Box::new(self.params.as_slice())));
+            fields.push(("text", Box::new(self.text.to_string())));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -652,22 +653,22 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Param {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Param", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("name", box self.name.to_string()));
+            fields.push(("name", Box::new(self.name.to_string())));
             match self.value {
-                Some(ref value) => fields.push(("value", box value.to_string())),
+                Some(ref value) => fields.push(("value", Box::new(value.to_string()))),
                 None => ()
             }
             match self.file_name {
-                Some(ref file_name) => fields.push(("fileName", box file_name.to_string())),
+                Some(ref file_name) => fields.push(("fileName", Box::new(file_name.to_string()))),
                 None => ()
             }
             match self.content_type {
                 Some(ref content_type) =>
-                    fields.push(("contentType", box content_type.to_string())),
+                    fields.push(("contentType", Box::new(content_type.to_string()))),
                 None => ()
             }
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -718,22 +719,22 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Content {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Content", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("size", box self.size));
+            fields.push(("size", Box::new(self.size)));
             match self.compression {
-                Some(ref compression) => fields.push(("compression", box compression)),
+                Some(ref compression) => fields.push(("compression", Box::new(compression))),
                 None => ()
             }
-            fields.push(("mimeType", box self.mime_type.to_string()));
+            fields.push(("mimeType", Box::new(self.mime_type.to_string())));
             match self.text {
-                Some(ref text) => fields.push(("text", box text)),
+                Some(ref text) => fields.push(("text", Box::new(text))),
                 None => ()
             }
             match self.encoding {
-                Some(ref encoding) => fields.push(("encoding", box encoding)),
+                Some(ref encoding) => fields.push(("encoding", Box::new(encoding))),
                 None => ()
             }
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -765,17 +766,20 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Cache {
         encoder.emit_struct("Cache", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             match self.before_request {
-                Absent => fields.push(("beforeRequest", box None::<CacheEntry>)),
-                Present(ref before_request) => fields.push(("beforeRequest", box before_request)),
+                Absent => fields.push(("beforeRequest", Box::new(None::<CacheEntry>))),
+                Present(ref before_request) =>
+                    fields.push(("beforeRequest", Box::new(before_request))),
                 Unknown => ()
             }
             match self.after_request {
-                Absent => fields.push(("afterRequest", box None::<CacheEntry>)),
-                Present(ref after_request) => fields.push(("afterRequest", box after_request)),
+                Absent => fields.push(("afterRequest", Box::new(None::<CacheEntry>))),
+                Present(ref after_request) =>
+                    fields.push(("afterRequest", Box::new(after_request))),
                 Unknown => ()
             }
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) =>
+                    fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -819,14 +823,14 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
         encoder.emit_struct("CacheEntry", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
             match self.expires {
-                Some(ref expires) => fields.push(("expires", box expires.to_string())),
+                Some(ref expires) => fields.push(("expires", Box::new(expires.to_string()))),
                 None => ()
             }
-            fields.push(("lastAccess", box self.last_access.to_string()));
-            fields.push(("eTag", box self.e_tag.to_string()));
-            fields.push(("hitCount", box self.hit_count));
+            fields.push(("lastAccess", Box::new(self.last_access.to_string())));
+            fields.push(("eTag", Box::new(self.e_tag.to_string())));
+            fields.push(("hitCount", Box::new(self.hit_count)));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
@@ -912,15 +916,15 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Timing {
     fn encode(&self, encoder: &mut S) -> Result<(), E> {
         encoder.emit_struct("Timing", 0, |encoder| {
             let mut fields: Vec<(&str, Box<Encodable<S, E>>)> = Vec::new();
-            fields.push(("blocked", box self.blocked));
-            fields.push(("dns", box self.dns));
-            fields.push(("connect", box self.connect));
-            fields.push(("send", box self.send));
-            fields.push(("wait", box self.wait));
-            fields.push(("receive", box self.receive));
-            fields.push(("ssl", box self.ssl));
+            fields.push(("blocked", Box::new(self.blocked)));
+            fields.push(("dns", Box::new(self.dns)));
+            fields.push(("connect", Box::new(self.connect)));
+            fields.push(("send", Box::new(self.send)));
+            fields.push(("wait", Box::new(self.wait)));
+            fields.push(("receive", Box::new(self.receive)));
+            fields.push(("ssl", Box::new(self.ssl)));
             match self.comment {
-                Some(ref comment) => fields.push(("comment", box comment.to_string())),
+                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
                 None => ()
             }
             for (idx, &(name, ref value)) in fields.iter().enumerate() {
