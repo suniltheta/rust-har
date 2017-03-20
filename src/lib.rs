@@ -306,7 +306,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Entry {
                 None => ()
             }
             fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
-            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as uint;
+            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as i32;
             for timing in vec![self.timings.blocked,
                                self.timings.dns,
                                self.timings.connect,
@@ -368,11 +368,11 @@ pub struct Request {
     /// Total number of bytes from the start of the HTTP request message until (and including)
     /// the double CRLF before the body.
     /// Set to -1 if the info is not available.
-    headers_size: Option<int>,
+    headers_size: Option<i32>,
 
     /// Size of the request body (POST data payload) in bytes.
     /// Set to -1 if the info is not available.
-    body_size: Option<int>,
+    body_size: Option<i32>,
 
     /// A comment provided by the user or the application.
     comment: Option<String>
@@ -410,7 +410,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for Request {
 /// This object contains detailed info about the response.
 pub struct Response {
     /// Response status.
-    status: int,
+    status: i32,
 
     /// Response status description.
     status_text: String,
@@ -436,12 +436,12 @@ pub struct Response {
     /// The size of received response-headers is computed only from headers that are really
     /// received from the server. Additional headers appended by the browser are not included in
     /// this number, but they appear in the list of header objects.
-    headers_size: Option<int>,
+    headers_size: Option<i32>,
 
     /// Size of the received response body in bytes.
     /// Set to zero in case of responses coming from the cache (304).
     /// Set to -1 if the info is not available.
-    body_size: Option<int>,
+    body_size: Option<i32>,
 
     /// A comment provided by the user or the application.
     comment: Option<String>
@@ -689,10 +689,10 @@ pub struct Content {
     /// Length of the returned content in bytes.
     /// Should be equal to response.bodySize if there is no compression and bigger when the content
     /// has been compressed.
-    size: int,
+    size: i32,
 
     /// Number of bytes saved. Leave out this field if the information is not available.
-    compression: Option<int>,
+    compression: Option<i32>,
 
     /// MIME type of the response text (value of the Content-Type response header).
     /// The charset attribute of the MIME type is included (if available).
@@ -808,7 +808,7 @@ pub struct CacheEntry {
     e_tag: String,
 
     /// The number of times the cache entry has been opened.
-    hit_count: int,
+    hit_count: i32,
 
     /// (new in 1.2) A comment provided by the user or the application.
     comment: Option<String>,
@@ -840,9 +840,9 @@ impl <S: Encoder<E>, E> Encodable<S, E> for CacheEntry {
 /// A timing value which may be absent or present
 ///
 /// Defaults to -1 in the absent case.
-#[deriving(Copy)]
+#[derive(Copy)]
 pub enum OptionalTiming {
-    TimedContent(uint),
+    TimedContent(u32),
     NotApplicable
 }
 
@@ -852,7 +852,7 @@ impl <S: Encoder<E>, E> Encodable<S, E> for OptionalTiming {
 
         let default_int = -1;
         let value = match *self {
-            TimedContent(value) => value as int,
+            TimedContent(value) => value as i32,
             NotApplicable => default_int
         };
         try!(encoder.emit_int(value));
@@ -890,13 +890,13 @@ pub struct Timing {
     connect: OptionalTiming,
 
     /// Time required to send HTTP request to the server.
-    send: uint,
+    send: u32,
 
     /// Waiting for a response from the server.
-    wait: uint,
+    wait: u32,
 
     /// Time required to read entire response from the server (or cache).
-    receive: uint,
+    receive: u32,
 
     /// Time required for SSL/TLS negotiation.
     /// If this field is defined then the time is also included in the connect field (to ensure
