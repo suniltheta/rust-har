@@ -1,6 +1,6 @@
 # Rust-HAR
 
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+[![Travis](https://img.shields.io/travis/suniltheta/rust-har/master.svg)](https://travis-ci.org/suniltheta/rust-har)
 
 _HTTP Archive 1.2 in Rust_
 
