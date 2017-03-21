@@ -1,4 +1,7 @@
 # Rust-HAR
+
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+
 _HTTP Archive 1.2 in Rust_
 
 This library implements the serialization of the [HAR 1.2 spec][1] in Rust.
