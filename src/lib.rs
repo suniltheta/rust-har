@@ -592,59 +592,59 @@ mod test {
             PageTimings::new(NotApplicable, NotApplicable, None),
             None
         ));
-        log.add_entry(Entry {
-            pageref: Some("page_0".to_string()),
-            started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
-            request: Request {
-                method: "GET".to_string(),
-                url: "http://www.example.com/path/?param=value".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                query_string: Vec::new(),
-                post_data: None,
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            response: Response {
-                status: 200,
-                status_text: "OK".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                content: Content {
-                    size: 100,
-                    compression: None,
-                    mime_type: "text/html; charset=utf8".to_string(),
-                    text: None,
-                    encoding: None,
-                    comment: None
-                },
-                redirect_url: "".to_string(),
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            cache: Cache {
-                before_request: Unknown,
-                after_request: Unknown,
-                comment: None
-            },
-            timings: Timing {
-                blocked: NotApplicable,
-                dns: NotApplicable,
-                connect: NotApplicable,
-                send: 4,
-                wait: 5,
-                receive: 6,
-                ssl: NotApplicable,
-                comment: None,
-            },
-            server_ip_address: None,
-            connection: None,
-            comment: None
-        });
+        log.add_entry(Entry::new(
+            Some("page_0".to_string()),
+            "2009-04-16T12:07:23.596Z".to_string(),
+            Request::new(
+                "GET".to_string(),
+                "http://www.example.com/path/?param=value".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                None,
+                None,
+                None,
+                None
+            ),
+            Response::new(
+                200,
+                "OK".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Content::new(
+                    100,
+                    None,
+                    "text/html; charset=utf8".to_string(),
+                    None,
+                    None,
+                    None
+                ),
+                "".to_string(),
+                None,
+                None,
+                None
+            ),
+            Cache::new(
+                Unknown,
+                Unknown,
+                None
+            ),
+            Timing::new(
+                NotApplicable,
+                NotApplicable,
+                NotApplicable,
+                4,
+                5,
+                6,
+                NotApplicable,
+                None
+            ),
+            None,
+            None,
+            None
+        ));
         let log_json = "{
                             \"version\": \"1.2\",
                             \"creator\": {
@@ -731,11 +731,11 @@ mod test {
 
     #[test]
     fn test_creator() {
-        let creator = Creator {
-            name: "Firebug".to_string(),
-            version: "1.6".to_string(),
-            comment: Some("Comment".to_string())
-        };
+        let creator = Creator::new(
+            "Firebug".to_string(),
+            "1.6".to_string(),
+            Some("Comment".to_string())
+        );
         let creator_json = "{
                                 \"name\": \"Firebug\",
                                 \"version\": \"1.6\",
@@ -747,11 +747,12 @@ mod test {
 
     #[test]
     fn test_creator_no_optional() {
-        let creator = Creator {
-            name: "Firebug".to_string(),
-            version: "1.6".to_string(),
-            comment: None
-        };
+        let creator = Creator::new(
+            "Firebug".to_string(),
+            "1.6".to_string(),
+            None
+        );
+
         let creator_json = "{
                                 \"name\": \"Firebug\",
                                 \"version\": \"1.6\"
@@ -857,59 +858,59 @@ mod test {
 
     #[test]
     fn test_entry() {
-        let entry = Entry {
-            pageref: Some("page_0".to_string()),
-            started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
-            request: Request {
-                method: "GET".to_string(),
-                url: "http://www.example.com/path/?param=value".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                query_string: Vec::new(),
-                post_data: None,
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            response: Response {
-                status: 200,
-                status_text: "OK".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                content: Content {
-                    size: 100,
-                    compression: None,
-                    mime_type: "text/html; charset=utf8".to_string(),
-                    text: None,
-                    encoding: None,
-                    comment: None
-                },
-                redirect_url: "".to_string(),
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            cache: Cache {
-                before_request: Unknown,
-                after_request: Unknown,
-                comment: None
-            },
-            timings: Timing {
-                blocked: TimedContent(1),
-                dns: TimedContent(2),
-                connect: TimedContent(3),
-                send: 4,
-                wait: 5,
-                receive: 6,
-                ssl: TimedContent(7),
-                comment: None,
-            },
-            server_ip_address: Some("10.0.0.1".to_string()),
-            connection: Some("52492".to_string()),
-            comment: Some("Comment".to_string())
-        };
+        let entry = Entry::new(
+            Some("page_0".to_string()),
+            "2009-04-16T12:07:23.596Z".to_string(),
+            Request::new(
+                "GET".to_string(),
+                "http://www.example.com/path/?param=value".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                None,
+                None,
+                None,
+                None
+            ),
+            Response::new(
+                200,
+                "OK".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Content::new(
+                    100,
+                    None,
+                    "text/html; charset=utf8".to_string(),
+                    None,
+                    None,
+                    None
+                ),
+                "".to_string(),
+                None,
+                None,
+                None
+            ),
+            Cache::new(
+                Unknown,
+                Unknown,
+                None
+            ),
+            Timing::new(
+                TimedContent(1),
+                TimedContent(2),
+                TimedContent(3),
+                4,
+                5,
+                6,
+                TimedContent(7),
+                None
+            ),
+            Some("10.0.0.1".to_string()),
+            Some("52492".to_string()),
+            Some("Comment".to_string())
+        );
         let entry_json = "{
                               \"pageref\": \"page_0\",
                               \"startedDateTime\": \"2009-04-16T12:07:23.596Z\",
@@ -958,59 +959,59 @@ mod test {
 
     #[test]
     fn test_entry_no_optional() {
-        let entry = Entry {
-            pageref: None,
-            started_date_time: "2009-04-16T12:07:23.596Z".to_string(),
-            request: Request {
-                method: "GET".to_string(),
-                url: "http://www.example.com/path/?param=value".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                query_string: Vec::new(),
-                post_data: None,
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            response: Response {
-                status: 200,
-                status_text: "OK".to_string(),
-                http_version: "HTTP/1.1".to_string(),
-                cookies: Vec::new(),
-                headers: Vec::new(),
-                content: Content {
-                    size: 100,
-                    compression: None,
-                    mime_type: "text/html; charset=utf8".to_string(),
-                    text: None,
-                    encoding: None,
-                    comment: None
-                },
-                redirect_url: "".to_string(),
-                headers_size: None,
-                body_size: None,
-                comment: None,
-            },
-            cache: Cache {
-                before_request: Unknown,
-                after_request: Unknown,
-                comment: None
-            },
-            timings: Timing {
-                blocked: NotApplicable,
-                dns: NotApplicable,
-                connect: NotApplicable,
-                send: 4,
-                wait: 5,
-                receive: 6,
-                ssl: NotApplicable,
-                comment: None,
-            },
-            server_ip_address: None,
-            connection: None,
-            comment: None
-        };
+        let entry = Entry::new(
+            None,
+            "2009-04-16T12:07:23.596Z".to_string(),
+            Request::new(
+                "GET".to_string(),
+                "http://www.example.com/path/?param=value".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                None,
+                None,
+                None,
+                None
+            ),
+            Response::new(
+                200,
+                "OK".to_string(),
+                "HTTP/1.1".to_string(),
+                Vec::new(),
+                Vec::new(),
+                Content::new(
+                    100,
+                    None,
+                    "text/html; charset=utf8".to_string(),
+                    None,
+                    None,
+                    None
+                ),
+                "".to_string(),
+                None,
+                None,
+                None
+            ),
+            Cache::new(
+                Unknown,
+                Unknown,
+                None
+            ),
+            Timing::new(
+                NotApplicable,
+                NotApplicable,
+                NotApplicable,
+                4,
+                5,
+                6,
+                NotApplicable,
+                None
+            ),
+            None,
+            None,
+            None
+        );
         let entry_json = "{
                               \"startedDateTime\": \"2009-04-16T12:07:23.596Z\",
                               \"request\": {
@@ -1056,40 +1057,40 @@ mod test {
 
     #[test]
     fn test_request() {
-        let request = Request {
-            method: "GET".to_string(),
-            url: "http://www.example.com/path/?param=value".to_string(),
-            http_version: "HTTP/1.1".to_string(),
-            cookies: vec![ Cookie {
-                name: "TestCookie".to_string(),
-                value: "Cookie Value".to_string(),
-                path: None,
-                domain: None,
-                expires: None,
-                http_only: None,
-                secure: None,
-                comment: None
-            }],
-            headers: vec![ Header {
-                name: "Accept-Encoding".to_string(),
-                value: "gzip,deflate".to_string(),
-                comment: None
-            }],
-            query_string: vec![QueryStringPair {
-                name: "param1".to_string(),
-                value: "value1".to_string(),
-                comment: None
-            }],
-            post_data: Some(PostData {
-                mime_type: "multipart/form-data".to_string(),
-                params: Vec::new(),
-                text: "plain posted data".to_string(),
-                comment: None
-            }),
-            headers_size: Some(150),
-            body_size: Some(0),
-            comment: Some("Comment".to_string())
-        };
+        let request = Request::new(
+            "GET".to_string(),
+            "http://www.example.com/path/?param=value".to_string(),
+            "HTTP/1.1".to_string(),
+            vec![ Cookie::new(
+                "TestCookie".to_string(),
+                "Cookie Value".to_string(),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None
+            )],
+            vec![Header::new(
+                "Accept-Encoding".to_string(),
+                "gzip,deflate".to_string(),
+                None
+            )],
+            vec![QueryStringPair::new(
+                "param1".to_string(),
+                "value1".to_string(),
+                None
+            )],
+            Some(PostData::new(
+                "multipart/form-data".to_string(),
+                Vec::new(),
+                "plain posted data".to_string(),
+                None
+            )),
+            Some(150),
+            Some(0),
+            Some("Comment".to_string())
+        );
         let request_json = "{
                                 \"method\": \"GET\",
                                 \"url\": \"http://www.example.com/path/?param=value\",
@@ -1125,18 +1126,18 @@ mod test {
 
     #[test]
     fn test_request_no_optional() {
-        let request = Request {
-            method: "GET".to_string(),
-            url: "http://www.example.com/path/?param=value".to_string(),
-            http_version: "HTTP/1.1".to_string(),
-            cookies: Vec::new(),
-            headers: Vec::new(),
-            query_string: Vec::new(),
-            post_data: None,
-            headers_size: None,
-            body_size: None,
-            comment: None,
-        };
+        let request = Request::new(
+            "GET".to_string(),
+            "http://www.example.com/path/?param=value".to_string(),
+            "HTTP/1.1".to_string(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            None,
+            None,
+            None,
+            None,
+        );
         let request_json = "{
                                 \"method\": \"GET\",
                                 \"url\": \"http://www.example.com/path/?param=value\",
@@ -1153,25 +1154,18 @@ mod test {
 
     #[test]
     fn test_response() {
-        let response = Response {
-            status: 200,
-            status_text: "OK".to_string(),
-            http_version: "HTTP/1.1".to_string(),
-            cookies: Vec::new(),
-            headers: Vec::new(),
-            content: Content {
-                size: 100,
-                compression: None,
-                mime_type: "text/html; charset=utf8".to_string(),
-                text: None,
-                encoding: None,
-                comment: None
-            },
-            redirect_url: "".to_string(),
-            headers_size: Some(160),
-            body_size: Some(850),
-            comment: Some("".to_string()),
-        };
+        let response = Response::new(
+            200, 
+            "OK".to_string(), 
+            "HTTP/1.1".to_string(), 
+            Vec::new(), 
+            Vec::new(), 
+            Content::new(100, None, "text/html; charset=utf8".to_string(), None, None, None), 
+            "".to_string(), 
+            Some(160),
+            Some(850),
+            Some("".to_string())
+        );
         let response_json = "{
                                 \"status\": 200,
                                 \"statusText\": \"OK\",
@@ -1193,25 +1187,19 @@ mod test {
 
     #[test]
     fn test_response_no_optional() {
-        let response = Response {
-            status: 200,
-            status_text: "OK".to_string(),
-            http_version: "HTTP/1.1".to_string(),
-            cookies: Vec::new(),
-            headers: Vec::new(),
-            content: Content {
-                size: 100,
-                compression: None,
-                mime_type: "text/html; charset=utf8".to_string(),
-                text: None,
-                encoding: None,
-                comment: None
-            },
-            redirect_url: "".to_string(),
-            headers_size: None,
-            body_size: None,
-            comment: None,
-        };
+        let response = Response::new(
+            200, 
+            "OK".to_string(), 
+            "HTTP/1.1".to_string(), 
+            Vec::new(), 
+            Vec::new(), 
+            Content::new(100, None, "text/html; charset=utf8".to_string(), None, None, None), 
+            "".to_string(), 
+            None,
+            None,
+            None
+        );
+
         let response_json = "{
                                 \"status\": 200,
                                 \"statusText\": \"OK\",
@@ -1232,16 +1220,16 @@ mod test {
 
     #[test]
     fn test_cookie() {
-        let cookie = Cookie {
-            name: "TestCookie".to_string(),
-            value: "Cookie Value".to_string(),
-            path: Some("/".to_string()),
-            domain: Some("www.janodvarko.cz".to_string()),
-            expires: Some("2009-07-24T19:20:30.123+02:00".to_string()),
-            http_only: Some(false),
-            secure: Some(false),
-            comment: Some("".to_string()),
-        };
+        let cookie = Cookie::new(
+            "TestCookie".to_string(),
+            "Cookie Value".to_string(), 
+            Some("/".to_string()), 
+            Some("www.janodvarko.cz".to_string()), 
+            Some("2009-07-24T19:20:30.123+02:00".to_string()), 
+            Some(false), 
+            Some(false), 
+            Some("".to_string())
+        );
         let cookie_json = "{
                                \"name\": \"TestCookie\",
                                \"value\": \"Cookie Value\",
@@ -1258,16 +1246,16 @@ mod test {
 
     #[test]
     fn test_cookie_no_optional() {
-        let cookie = Cookie {
-            name: "TestCookie".to_string(),
-            value: "Cookie Value".to_string(),
-            path: None,
-            domain: None,
-            expires: None,
-            http_only: None,
-            secure: None,
-            comment: None
-        };
+        let cookie = Cookie::new(
+            "TestCookie".to_string(),
+            "Cookie Value".to_string(),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None
+        );
         let cookie_json = "{
                                \"name\": \"TestCookie\",
                                \"value\": \"Cookie Value\"
@@ -1278,11 +1266,11 @@ mod test {
 
     #[test]
     fn test_header() {
-        let header = Header {
-            name: "Accept-Encoding".to_string(),
-            value: "gzip,deflate".to_string(),
-            comment: Some("Comment".to_string())
-        };
+        let header = Header::new(
+            "Accept-Encoding".to_string(),
+            "gzip,deflate".to_string(),
+            Some("Comment".to_string())
+        );
         let header_json = "{
                                \"name\": \"Accept-Encoding\",
                                \"value\": \"gzip,deflate\",
@@ -1294,11 +1282,11 @@ mod test {
 
     #[test]
     fn test_header_no_optional() {
-        let header = Header {
-            name: "Accept-Encoding".to_string(),
-            value: "gzip,deflate".to_string(),
-            comment: None
-        };
+        let header = Header::new(
+            "Accept-Encoding".to_string(),
+            "gzip,deflate".to_string(),
+            None
+        );
         let header_json = "{
                                \"name\": \"Accept-Encoding\",
                                \"value\": \"gzip,deflate\"
@@ -1309,11 +1297,11 @@ mod test {
 
     #[test]
     fn test_query_string_pair() {
-        let query_string_pair = QueryStringPair {
-            name: "param1".to_string(),
-            value: "value1".to_string(),
-            comment: Some("Comment".to_string())
-        };
+        let query_string_pair = QueryStringPair::new(
+            "param1".to_string(),
+            "value1".to_string(),
+            Some("Comment".to_string())
+        );
         let query_string_pair_json = "{
                                           \"name\": \"param1\",
                                           \"value\": \"value1\",
@@ -1325,11 +1313,11 @@ mod test {
 
     #[test]
     fn test_query_string_pair_no_optional() {
-        let query_string_pair = QueryStringPair {
-            name: "param1".to_string(),
-            value: "value1".to_string(),
-            comment: None
-        };
+        let query_string_pair = QueryStringPair::new(
+            "param1".to_string(),
+            "value1".to_string(),
+            None
+        );
         let query_string_pair_json = "{
                                           \"name\": \"param1\",
                                           \"value\": \"value1\"
@@ -1340,18 +1328,12 @@ mod test {
 
     #[test]
     fn test_post_data() {
-        let post_data = PostData {
-            mime_type: "multipart/form-data".to_string(),
-            params: vec![Param {
-                name: "paramName".to_string(),
-                value: None,
-                file_name: None,
-                content_type: None,
-                comment: None
-            }],
-            text: "plain posted data".to_string(),
-            comment: Some("Comment".to_string())
-        };
+        let post_data = PostData::new(
+            "multipart/form-data".to_string(),
+            vec![Param::new( "paramName".to_string(), None, None, None, None)],
+            "plain posted data".to_string(),
+            Some("Comment".to_string())
+        );
         let post_data_json = "{
                                   \"mimeType\": \"multipart/form-data\",
                                   \"params\": [
@@ -1368,12 +1350,12 @@ mod test {
 
     #[test]
     fn test_post_data_no_optional() {
-        let post_data = PostData {
-            mime_type: "multipart/form-data".to_string(),
-            params: Vec::new(),
-            text: "plain posted data".to_string(),
-            comment: None
-        };
+        let post_data = PostData::new(
+            "multipart/form-data".to_string(),
+            Vec::new(),
+            "plain posted data".to_string(),
+            None
+        );
         let post_data_json = "{
                                   \"mimeType\": \"multipart/form-data\",
                                   \"params\": [],
@@ -1385,13 +1367,13 @@ mod test {
 
     #[test]
     fn test_param() {
-        let param = Param {
-            name: "paramName".to_string(),
-            value: Some("paramValue".to_string()),
-            file_name: Some("example.pdf".to_string()),
-            content_type: Some("application/pdf".to_string()),
-            comment: Some("Comment".to_string())
-        };
+        let param = Param::new(
+            "paramName".to_string(),
+            Some("paramValue".to_string()),
+            Some("example.pdf".to_string()),
+            Some("application/pdf".to_string()),
+            Some("Comment".to_string())
+        );
         let param_json = "{
                               \"name\": \"paramName\",
                               \"value\": \"paramValue\",
@@ -1405,13 +1387,13 @@ mod test {
 
     #[test]
     fn test_param_no_optional() {
-        let param = Param {
-            name: "paramName".to_string(),
-            value: None,
-            file_name: None,
-            content_type: None,
-            comment: None
-        };
+        let param = Param::new(
+            "paramName".to_string(),
+            None,
+            None,
+            None,
+            None
+        );
         let param_json = "{
                               \"name\": \"paramName\"
                           }";
@@ -1421,14 +1403,13 @@ mod test {
 
     #[test]
     fn test_content() {
-        let content = Content {
-            size: 100,
-            compression: Some(0),
-            mime_type: "text/html; charset=utf8".to_string(),
-            text: Some("\n".to_string()),
-            encoding: Some("base64".to_string()),
-            comment: Some("Comment".to_string())
-        };
+        let content = Content::new(
+            100, Some(0),
+            "text/html; charset=utf8".to_string(),
+            Some("\n".to_string()),
+            Some("base64".to_string()),
+            Some("Comment".to_string())
+        );
         let content_json = "{
                                 \"size\": 100,
                                 \"compression\": 0,
@@ -1443,14 +1424,13 @@ mod test {
 
     #[test]
     fn test_content_no_optional() {
-        let content = Content {
-            size: 100,
-            compression: None,
-            mime_type: "text/html; charset=utf8".to_string(),
-            text: None,
-            encoding: None,
-            comment: None
-        };
+        let content = Content::new(
+            100, None,
+            "text/html; charset=utf8".to_string(),
+            None,
+            None,
+            None
+        );
         let content_json = "{
                                 \"size\": 100,
                                 \"mimeType\": \"text/html; charset=utf8\"
@@ -1461,23 +1441,23 @@ mod test {
 
     #[test]
     fn test_cache() {
-        let cache = Cache {
-            before_request: Present(CacheEntry {
-                expires: None,
-                last_access: "2000-01-01T00:00:00.000Z".to_string(),
-                e_tag: "123456789".to_string(),
-                hit_count: 42,
-                comment: None
-            }),
-            after_request: Present(CacheEntry {
-                expires: None,
-                last_access: "2000-02-01T00:00:00.000Z".to_string(),
-                e_tag: "987654321".to_string(),
-                hit_count: 24,
-                comment: None
-            }),
-            comment: Some("Comment".to_string())
-        };
+        let cache = Cache::new(
+            Present(CacheEntry::new(
+                None, 
+                "2000-01-01T00:00:00.000Z".to_string(), 
+                "123456789".to_string(),
+                42,
+                None
+            )),
+            Present(CacheEntry::new(
+                None, 
+                "2000-02-01T00:00:00.000Z".to_string(), 
+                "987654321".to_string(), 
+                24, 
+                None
+            )),
+            Some("Comment".to_string())
+        );
         let cache_json = "{
                               \"beforeRequest\": {
                                   \"lastAccess\": \"2000-01-01T00:00:00.000Z\",
@@ -1497,11 +1477,11 @@ mod test {
 
     #[test]
     fn test_cache_absent_entries() {
-        let cache = Cache {
-            before_request: Absent,
-            after_request: Absent,
-            comment: None
-        };
+        let cache = Cache::new(
+            Absent,
+            Absent,
+            None
+        );
         let cache_json = "{
                               \"beforeRequest\": null,
                               \"afterRequest\": null
@@ -1512,11 +1492,11 @@ mod test {
 
     #[test]
     fn test_cache_unknown_entries() {
-        let cache = Cache {
-            before_request: Unknown,
-            after_request: Unknown,
-            comment: None
-        };
+        let cache = Cache::new(
+            Unknown,
+            Unknown,
+            None
+        );
         let cache_json = "{}";
         let cache_from_str: Cache = serde_json::from_str(cache_json).unwrap();
         assert_eq!(cache_from_str, cache );
@@ -1525,13 +1505,13 @@ mod test {
 
     #[test]
     fn test_cache_entry() {
-        let cache_entry = CacheEntry {
-            expires: Some("2000-02-01T00:00:00.000Z".to_string()),
-            last_access: "2000-01-01T00:00:00.000Z".to_string(),
-            e_tag: "123456789".to_string(),
-            hit_count: 42,
-            comment: Some("Comment".to_string())
-        };
+        let cache_entry = CacheEntry::new(
+            Some("2000-02-01T00:00:00.000Z".to_string()), 
+            "2000-01-01T00:00:00.000Z".to_string(), 
+            "123456789".to_string(), 
+            42, 
+            Some("Comment".to_string())
+        );
         let cache_entry_json = "{
                                     \"expires\": \"2000-02-01T00:00:00.000Z\",
                                     \"lastAccess\": \"2000-01-01T00:00:00.000Z\",
@@ -1545,13 +1525,13 @@ mod test {
 
     #[test]
     fn test_cache_entry_no_optional() {
-        let cache_entry = CacheEntry {
-            expires: None,
-            last_access: "2000-01-01T00:00:00.000Z".to_string(),
-            e_tag: "123456789".to_string(),
-            hit_count: 42,
-            comment: None
-        };
+        let cache_entry = CacheEntry::new(
+            None, 
+            "2000-01-01T00:00:00.000Z".to_string(), 
+            "123456789".to_string(), 
+            42, 
+            None
+        );         
         let cache_entry_json = "{
                                     \"lastAccess\": \"2000-01-01T00:00:00.000Z\",
                                     \"eTag\": \"123456789\",
@@ -1562,16 +1542,17 @@ mod test {
     }
     #[test]
     fn test_timing() {
-        let timing = Timing {
-            blocked: TimedContent(1),
-            dns: TimedContent(2),
-            connect: TimedContent(3),
-            send: 4,
-            wait: 5,
-            receive: 6,
-            ssl: TimedContent(7),
-            comment: Some("Comment".to_string()),
-        };
+        
+        let timing = Timing::new(
+            TimedContent(1), 
+            TimedContent(2), 
+            TimedContent(3), 
+            4,
+            5,
+            6,
+            TimedContent(7), 
+            Some("Comment".to_string())
+        );
         let timing_json = "{
                                 \"blocked\": 1,
                                 \"dns\": 2,
@@ -1588,16 +1569,16 @@ mod test {
 
     #[test]
     fn test_timing_no_optional() {
-        let timing = Timing {
-            blocked: NotApplicable,
-            dns: NotApplicable,
-            connect: NotApplicable,
-            send: 4,
-            wait: 5,
-            receive: 6,
-            ssl: NotApplicable,
-            comment: None,
-        };
+        let timing = Timing::new(
+            NotApplicable, 
+            NotApplicable, 
+            NotApplicable, 
+            4, 
+            5, 
+            6, 
+            NotApplicable, 
+            None
+        );
         let timing_json = "{
                                 \"blocked\": -1,
                                 \"dns\": -1,
