@@ -882,8 +882,8 @@ mod test {
                 None
             ),
             Cache::new(
-                Unknown,
-                Unknown,
+                Absent,
+                Absent,
                 None
             ),
             Timing::new(
@@ -932,8 +932,8 @@ mod test {
                                         \"cookies\": [],
                                         \"headers\": [],
                                         \"queryString\": [],
-                                        \"headersSize\": -1,
-                                        \"bodySize\": -1
+                                        \"headersSize\": null,
+                                        \"bodySize\": null
                                     },
                                     \"response\": {
                                         \"status\": 200,
@@ -946,19 +946,22 @@ mod test {
                                             \"mimeType\": \"text/html; charset=utf8\"
                                         },
                                         \"redirectUrl\": \"\",
-                                        \"headersSize\": -1,
-                                        \"bodySize\": -1
+                                        \"headersSize\": null,
+                                        \"bodySize\": null
                                     },
-                                    \"cache\": {},
+                                    \"cache\": {
+                                        \"beforeRequest\": null,
+                                        \"afterRequest\": null
+                                    },
                                     \"time\": 15,
                                     \"timings\": {
-                                         \"blocked\": -1,
-                                         \"dns\": -1,
-                                         \"connect\": -1,
+                                         \"blocked\": null,
+                                         \"dns\": null,
+                                         \"connect\": null,
                                          \"send\": 4,
                                          \"wait\": 5,
                                          \"receive\": 6,
-                                         \"ssl\": -1
+                                         \"ssl\": null
                                     }
                                 }
                             ],
@@ -1148,8 +1151,8 @@ mod test {
                 None
             ),
             Cache::new(
-                Unknown,
-                Unknown,
+                Absent,
+                Absent,
                 None
             ),
             Timing::new(
@@ -1175,9 +1178,7 @@ mod test {
                                   \"httpVersion\": \"HTTP/1.1\",
                                   \"cookies\": [],
                                   \"headers\": [],
-                                  \"queryString\": [],
-                                  \"headersSize\": -1,
-                                  \"bodySize\": -1
+                                  \"queryString\": []
                               },
                               \"response\": {
                                   \"status\": 200,
@@ -1189,11 +1190,12 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\",
-                                  \"headersSize\": -1,
-                                  \"bodySize\": -1
+                                  \"redirectUrl\": \"\"
                               },
-                              \"cache\": {},
+                              \"cache\": {
+                                    \"beforeRequest\": null,
+                                    \"afterRequest\": null
+                              },
                               \"time\": 28,
                               \"timings\": {
                                    \"blocked\": 1,
@@ -1204,7 +1206,7 @@ mod test {
                                    \"receive\": 6,
                                    \"ssl\": 7
                               },
-                              \"serverIPAddress\": \"10.0.0.1\",
+                              \"serverIpAddress\": \"10.0.0.1\",
                               \"connection\": \"52492\",
                               \"comment\": \"Comment\"
                           }";
@@ -1249,8 +1251,8 @@ mod test {
                 None
             ),
             Cache::new(
-                Unknown,
-                Unknown,
+                Absent,
+                Absent,
                 None
             ),
             Timing::new(
@@ -1275,9 +1277,7 @@ mod test {
                                   \"httpVersion\": \"HTTP/1.1\",
                                   \"cookies\": [],
                                   \"headers\": [],
-                                  \"queryString\": [],
-                                  \"headersSize\": -1,
-                                  \"bodySize\": -1
+                                  \"queryString\": []
                               },
                               \"response\": {
                                   \"status\": 200,
@@ -1289,20 +1289,21 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\",
-                                  \"headersSize\": -1,
-                                  \"bodySize\": -1
+                                  \"redirectUrl\": \"\"
                               },
-                              \"cache\": {},
+                              \"cache\": {
+                                    \"beforeRequest\": null,
+                                    \"afterRequest\": null
+                              },
                               \"time\": 15,
                               \"timings\": {
-                                   \"blocked\": -1,
-                                   \"dns\": -1,
-                                   \"connect\": -1,
+                                   \"blocked\": null,
+                                   \"dns\": null,
+                                   \"connect\": null,
                                    \"send\": 4,
                                    \"wait\": 5,
                                    \"receive\": 6,
-                                   \"ssl\": -1
+                                   \"ssl\": null
                               }
                           }";
         let entry_from_str: Entry = serde_json::from_str(entry_json).unwrap();
