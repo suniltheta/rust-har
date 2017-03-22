@@ -2,6 +2,7 @@
 ///
 /// [1]: http://www.softwareishard.com/blog/har-12-spec/
 
+extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
@@ -433,11 +434,44 @@ pub struct Cache {
 /// CacheEntry value, or no object.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
+#[serde(untagged)]
 pub enum CacheState {
     Absent,
     Present(CacheEntry),
     Unknown
 }
+
+/*
+use serde::de::{Deserialize, Deserializer, Visitor, Error};
+
+impl Deserialize for CacheState {
+    fn deserialize<D>(deserializer: D) -> Result<CacheState, D::Error>
+        where D: Deserializer
+    {
+        struct FieldVisitor;
+
+        impl Visitor for FieldVisitor {
+            type Value = CacheState;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("empty, null or cache entry")
+            }
+
+            fn visit_str<E>(self, value: &str) -> Result<CacheState, E>
+                where E: Error
+            {
+                match value {
+                    "" => Ok(CacheState::Absent),
+                    "null" => Ok(CacheState::Unknown),
+                    _ => Err(E::syntax(&format!("Unexpected field: {}", value))),
+                }
+            }
+        }
+
+        deserializer.deserialize_struct_field(FieldVisitor)
+    }
+}
+*/
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -463,6 +497,7 @@ pub struct CacheEntry {
 /// Defaults to -1 in the absent case.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
+#[serde(untagged)]
 pub enum OptionalTiming {
     TimedContent(u32),
     NotApplicable
