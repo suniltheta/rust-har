@@ -945,7 +945,7 @@ mod test {
                                             \"size\": 100,
                                             \"mimeType\": \"text/html; charset=utf8\"
                                         },
-                                        \"redirectURL\": \"\",
+                                        \"redirectUrl\": \"\",
                                         \"headersSize\": -1,
                                         \"bodySize\": -1
                                     },
@@ -1189,7 +1189,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectURL\": \"\",
+                                  \"redirectUrl\": \"\",
                                   \"headersSize\": -1,
                                   \"bodySize\": -1
                               },
@@ -1289,7 +1289,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectURL\": \"\",
+                                  \"redirectUrl\": \"\",
                                   \"headersSize\": -1,
                                   \"bodySize\": -1
                               },
@@ -1429,7 +1429,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectURL\": \"\",
+                                \"redirectUrl\": \"\",
                                 \"headersSize\" : 160,
                                 \"bodySize\" : 850,
                                 \"comment\" : \"\"
