@@ -42,11 +42,11 @@ impl Log {
     pub fn new(browser: Option<Browser>, comment: Option<String>) -> Log {
         Log {
             version: HAR_VERSION.to_string(),
-            creator: Creator {
-                name: HAR_CREATOR_NAME.to_string(),
-                version: HAR_CREATOR_VERSION.to_string(),
-                comment: None
-            },
+            creator: Creator::new(
+                HAR_CREATOR_NAME.to_string(),
+                HAR_CREATOR_VERSION.to_string(),
+                None
+            ),
             browser: browser,
             pages: None,
             entries: Vec::new(),
@@ -73,6 +73,16 @@ pub struct Creator {
     name: String,
     version: String,
     comment: Option<String>
+}
+
+impl Creator {
+    pub fn new(name: String, version: String, comment: Option<String>) -> Creator{
+        Creator {
+            name: name,
+            version: version,
+            comment: comment
+        }
+    }
 }
 
 /// This object contains information about the browser that created the log.
@@ -207,6 +217,32 @@ pub struct Entry {
     comment: Option<String>
 }
 
+impl Entry {
+    pub fn new(
+        pageref: Option<String>,
+        started_date_time: String,
+        request: Request,
+        response: Response,
+        cache: Cache,
+        timings: Timing,
+        server_ip_address: Option<String>,
+        connection: Option<String>,
+        comment: Option<String>
+    ) -> Entry {
+        Entry {
+            pageref: pageref,
+            started_date_time: started_date_time,
+            request: request,
+            response: response,
+            cache: cache,
+            timings: timings,
+            server_ip_address: server_ip_address,
+            connection: connection,
+            comment: comment
+        }
+    }
+}
+
 /// This object contains detailed info about performed request.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -243,6 +279,34 @@ pub struct Request {
 
     /// A comment provided by the user or the application.
     comment: Option<String>
+}
+
+impl Request {
+    pub fn new(
+        method: String,
+        url: String,
+        http_version: String,
+        cookies: Vec<Cookie>,
+        headers: Vec<Header>,
+        query_string: Vec<QueryStringPair>,
+        post_data: Option<PostData>,
+        headers_size: Option<i32>,
+        body_size: Option<i32>,
+        comment: Option<String>
+    ) -> Request {
+        Request {
+            method: method,
+            url: url,
+            http_version: http_version,
+            cookies: cookies,
+            headers: headers,
+            query_string: query_string,
+            post_data: post_data,
+            headers_size: headers_size,
+            body_size: body_size,
+            comment: comment
+        }
+    }
 }
 
 /// This object contains detailed info about the response.
@@ -287,6 +351,34 @@ pub struct Response {
     comment: Option<String>
 }
 
+impl Response {
+    pub fn new(
+        status: i32,
+        status_text: String,
+        http_version: String,
+        cookies: Vec<Cookie>,
+        headers: Vec<Header>,
+        content: Content,
+        redirect_url: String,
+        headers_size: Option<i32>,
+        body_size: Option<i32>,
+        comment: Option<String>
+    ) -> Response {
+        Response {
+            status: status,
+            status_text: status_text,
+            http_version: http_version,
+            cookies: cookies,
+            headers: headers,
+            content: content,
+            redirect_url: redirect_url,
+            headers_size: headers_size,
+            body_size: body_size,
+            comment: comment
+        }
+    }
+}
+
 
 /// This object contains list of all cookies (used in <request> and <response> objects).
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -317,6 +409,30 @@ pub struct Cookie {
     comment: Option<String>
 }
 
+impl Cookie {
+    pub fn new(
+        name: String,
+        value: String,
+        path: Option<String>,
+        domain: Option<String>,
+        expires: Option<String>,
+        http_only: Option<bool>,
+        secure: Option<bool>,
+        comment: Option<String>
+    ) -> Cookie {
+        Cookie {
+            name: name,
+            value: value,
+            path: path,
+            domain: domain,
+            expires: expires,
+            http_only: http_only,
+            secure: secure,
+            comment: comment
+        }
+    }
+}
+
 
 /// This object contains list of all headers (used in <request> and <response> objects).
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -325,6 +441,20 @@ pub struct Header {
     name: String,
     value: String,
     comment: Option<String>
+}
+
+impl Header {
+    pub fn new(
+        name: String,
+        value: String,
+        comment: Option<String>
+    ) -> Header {
+        Header {
+            name: name,
+            value: value,
+            comment: comment
+        }
+    }
 }
 
 /// This object contains list of all parameters & values parsed from a query string, if any
@@ -336,6 +466,20 @@ pub struct QueryStringPair {
     name: String,
     value: String,
     comment: Option<String>
+}
+
+impl QueryStringPair {
+    pub fn new(
+        name: String,
+        value: String,
+        comment: Option<String>
+    ) -> QueryStringPair {
+        QueryStringPair {
+            name: name,
+            value: value,
+            comment: comment
+        }
+    }
 }
 
 /// This object describes posted data, if any (embedded in <request> object).
@@ -356,6 +500,22 @@ pub struct PostData {
     comment: Option<String>
 }
 
+impl PostData {
+    pub fn new(
+        mime_type: String,
+        params: Vec<Param>,
+        text: String,
+        comment: Option<String>
+    ) -> PostData {
+        PostData {
+            mime_type: mime_type,
+            params: params,
+            text: text,
+            comment: comment
+        }
+    }
+}
+
 /// List of posted parameters, if any (embedded in <postData> object).
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -374,6 +534,24 @@ pub struct Param {
 
     /// A comment provided by the user or the application.
     comment: Option<String>,
+}
+
+impl Param {
+    pub fn new(
+        name: String,
+        value: Option<String>,
+        file_name: Option<String>,
+        content_type: Option<String>,
+        comment: Option<String>
+    ) -> Param {
+        Param {
+            name: name,
+            value: value,
+            file_name: file_name,
+            content_type: content_type,
+            comment: comment
+        }
+    }
 }
 
 /// This object describes details about response content (embedded in <response> object).
@@ -413,6 +591,26 @@ pub struct Content {
     comment: Option<String>,
 }
 
+impl Content {
+    pub fn new(
+        size: i32,
+        compression: Option<i32>,
+        mime_type: String,
+        text: Option<String>,
+        encoding: Option<String>,
+        comment: Option<String>
+    ) -> Content {
+        Content {
+            size: size,
+            compression: compression,
+            mime_type: mime_type,
+            text: text,
+            encoding: encoding,
+            comment: comment
+        }
+    }
+}
+
 /// This objects contains info about a request coming from browser cache.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -426,6 +624,20 @@ pub struct Cache {
     after_request: CacheState,
 
     comment: Option<String>
+}
+
+impl Cache {
+    pub fn new(
+        before_request: CacheState,
+        after_request: CacheState,
+        comment: Option<String>
+    ) -> Cache {
+        Cache {
+            before_request: before_request,
+            after_request: after_request,
+            comment: comment
+        }
+    }
 }
 
 /// The state of a cache entry.
@@ -492,6 +704,24 @@ pub struct CacheEntry {
     comment: Option<String>,
 }
 
+impl CacheEntry {
+    pub fn new(
+        expires: Option<String>,
+        last_access: String,
+        e_tag: String,
+        hit_count: i32,
+        comment: Option<String>
+    ) -> CacheEntry {
+        CacheEntry {
+            expires: expires,
+            last_access: last_access,
+            e_tag: e_tag,
+            hit_count: hit_count,
+            comment: comment
+        }
+    }
+}
+
 /// A timing value which may be absent or present
 ///
 /// Defaults to -1 in the absent case.
@@ -552,6 +782,31 @@ pub struct Timing {
     /// (new in 1.2) - A comment provided by the user or the application.
     comment: Option<String>
 }
+
+impl Timing {
+    pub fn new(
+        blocked: OptionalTiming,
+        dns: OptionalTiming,
+        connect: OptionalTiming,
+        send: u32,
+        wait: u32,
+        receive: u32,
+        ssl: OptionalTiming,
+        comment: Option<String>
+    ) -> Timing {
+        Timing {
+            blocked: blocked,
+            dns: dns,
+            connect: connect,
+            send: send,
+            wait: wait,
+            receive: receive,
+            ssl: ssl,
+            comment: comment
+        }
+    }
+}
+
 
 #[cfg(test)]
 mod test {
