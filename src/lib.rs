@@ -1391,7 +1391,7 @@ mod test {
             None,
             None,
             None,
-            None,
+            None
         );
         let request_json = "{
                                 \"method\": \"GET\",
@@ -1400,8 +1400,6 @@ mod test {
                                 \"cookies\": [],
                                 \"headers\": [],
                                 \"queryString\": [],
-                                \"headersSize\": -1,
-                                \"bodySize\": -1
                             }";
         let request_from_str: Request = serde_json::from_str(request_json).unwrap();
         assert_eq!(request_from_str, request );
