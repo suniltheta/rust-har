@@ -1463,9 +1463,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectURL\": \"\",
-                                \"headersSize\" : -1,
-                                \"bodySize\" : -1
+                                \"redirectURL\": \"\"
                             }";
         let response_from_str: Response = serde_json::from_str(response_json).unwrap();
         assert_eq!(response_from_str, response );
