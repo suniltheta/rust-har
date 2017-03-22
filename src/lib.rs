@@ -916,8 +916,8 @@ mod test {
                                     \"id\": \"page_0\",
                                     \"title\": \"Test Page\",
                                     \"pageTimings\": {
-                                        \"onContentLoad\": -1,
-                                        \"onLoad\": -1
+                                        \"onContentLoad\": null,
+                                        \"onLoad\": null
                                     }
                                 }
                             ],
@@ -1055,8 +1055,8 @@ mod test {
                              \"id\": \"page_0\",
                              \"title\": \"Test Page\",
                              \"pageTimings\": {
-                                 \"onContentLoad\": -1,
-                                 \"onLoad\": -1
+                                 \"onContentLoad\": null,
+                                 \"onLoad\": null
                              },
                              \"comment\": \"Comment\"
                          }";
@@ -1078,8 +1078,8 @@ mod test {
                              \"id\": \"page_0\",
                              \"title\": \"Test Page\",
                              \"pageTimings\": {
-                                 \"onContentLoad\": -1,
-                                 \"onLoad\": -1
+                                 \"onContentLoad\": null,
+                                 \"onLoad\": null
                              }
                          }";
         let page_from_str: Page = serde_json::from_str(page_json).unwrap();
@@ -1104,8 +1104,8 @@ mod test {
     fn test_page_timings_no_optional() {
         let page_timings = PageTimings::new(NotApplicable, NotApplicable, None);
         let page_timings_json = "{
-                                     \"onContentLoad\": -1,
-                                     \"onLoad\": -1
+                                     \"onContentLoad\": null,
+                                     \"onLoad\": null
                                  }";
         let page_timings_from_str: PageTimings = serde_json::from_str(page_timings_json).unwrap();
         assert_eq!(page_timings_from_str, page_timings );
@@ -1399,8 +1399,8 @@ mod test {
                                 \"httpVersion\": \"HTTP/1.1\",
                                 \"cookies\": [],
                                 \"headers\": [],
-                                \"queryString\": [],
-                            }";
+                                \"queryString\": []
+                            }";        
         let request_from_str: Request = serde_json::from_str(request_json).unwrap();
         assert_eq!(request_from_str, request );
     }
@@ -1833,13 +1833,13 @@ mod test {
             None
         );
         let timing_json = "{
-                                \"blocked\": -1,
-                                \"dns\": -1,
-                                \"connect\": -1,
+                                \"blocked\": null,
+                                \"dns\": null,
+                                \"connect\": null,
                                 \"send\": 4,
                                 \"wait\": 5,
                                 \"receive\": 6,
-                                \"ssl\": -1
+                                \"ssl\": null
                            }";
         let timing_from_str: Timing = serde_json::from_str(timing_json).unwrap();
         assert_eq!(timing_from_str, timing );
