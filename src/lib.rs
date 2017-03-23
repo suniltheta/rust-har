@@ -1743,6 +1743,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn test_cache_unknown_entries() {
         let cache = Cache::new(
             Unknown,
