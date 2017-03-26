@@ -8,6 +8,8 @@ extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
 
+use serde::de::{Deserialize, Deserializer};
+
 const HAR_VERSION: &'static str = "1.2";
 const HAR_CREATOR_NAME: &'static str = "Rust-HAR";
 const HAR_CREATOR_VERSION: &'static str = "0.0.4";
@@ -332,6 +334,7 @@ pub struct Response {
     content: Content,
 
     /// Redirection target URL from the Location response header.
+    #[serde(rename = "redirectURL")]
     redirect_url: String,
 
     /// Total number of bytes from the start of the HTTP response message until (and including) the
@@ -617,10 +620,12 @@ impl Content {
 pub struct Cache {
     /// State of a cache entry before the request.
     /// Leave out this field if the information is not available.
+    #[serde(default = "CacheState::unknown")]
     before_request: CacheState,
 
     /// State of a cache entry after the request.
     /// Leave out this field if the information is not available.
+    #[serde(default = "CacheState::unknown")]
     after_request: CacheState,
 
     comment: Option<String>
@@ -652,6 +657,11 @@ pub enum CacheState {
     Present(CacheEntry),
     Unknown
 }
+
+impl CacheState {
+    fn unknown() -> Self { CacheState::Unknown }
+}
+
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -693,12 +703,28 @@ impl CacheEntry {
 /// A timing value which may be absent or present
 ///
 /// Defaults to -1 in the absent case.
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Serialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 #[serde(untagged)]
 pub enum OptionalTiming {
     TimedContent(u32),
     NotApplicable
+}
+
+impl Deserialize for OptionalTiming {
+    fn deserialize<D>(deserializer: D) -> Result<OptionalTiming, D::Error>
+        where D: Deserializer
+    {
+        let deser_result: serde_json::Value = try!(serde::Deserialize::deserialize(deserializer));
+        match deser_result {
+            //serde_json::Value::Number(n) => Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
+            serde_json::Value::Number(ref n) if n.as_i64().unwrap() >= 0 as i64 => 
+	            Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
+            serde_json::Value::Number(ref n) if n.as_i64().unwrap() == -1 as i64 => 
+	            Ok(OptionalTiming::NotApplicable),
+            _ => Err(serde::de::Error::custom("Unexpected value")),
+        }
+    }
 }
 
 /// This object describes various phases within request-response round trip. All times are
@@ -884,8 +910,8 @@ mod test {
                                     \"id\": \"page_0\",
                                     \"title\": \"Test Page\",
                                     \"pageTimings\": {
-                                        \"onContentLoad\": null,
-                                        \"onLoad\": null
+                                        \"onContentLoad\": -1,
+                                        \"onLoad\": -1
                                     }
                                 }
                             ],
@@ -913,7 +939,7 @@ mod test {
                                             \"size\": 100,
                                             \"mimeType\": \"text/html; charset=utf8\"
                                         },
-                                        \"redirectUrl\": \"\",
+                                        \"redirectURL\": \"\",
                                         \"headersSize\": null,
                                         \"bodySize\": null
                                     },
@@ -923,13 +949,13 @@ mod test {
                                     },
                                     \"time\": 15,
                                     \"timings\": {
-                                         \"blocked\": null,
-                                         \"dns\": null,
-                                         \"connect\": null,
+                                         \"blocked\": -1,
+                                         \"dns\": -1,
+                                         \"connect\": -1,
                                          \"send\": 4,
                                          \"wait\": 5,
                                          \"receive\": 6,
-                                         \"ssl\": null
+                                         \"ssl\": -1
                                     }
                                 }
                             ],
@@ -1026,8 +1052,8 @@ mod test {
                              \"id\": \"page_0\",
                              \"title\": \"Test Page\",
                              \"pageTimings\": {
-                                 \"onContentLoad\": null,
-                                 \"onLoad\": null
+                                 \"onContentLoad\": -1,
+                                 \"onLoad\": -1
                              },
                              \"comment\": \"Comment\"
                          }";
@@ -1049,8 +1075,8 @@ mod test {
                              \"id\": \"page_0\",
                              \"title\": \"Test Page\",
                              \"pageTimings\": {
-                                 \"onContentLoad\": null,
-                                 \"onLoad\": null
+                                 \"onContentLoad\": -1,
+                                 \"onLoad\": -1
                              }
                          }";
         let page_from_str: Page = serde_json::from_str(page_json).unwrap();
@@ -1075,8 +1101,8 @@ mod test {
     fn test_page_timings_no_optional() {
         let page_timings = PageTimings::new(NotApplicable, NotApplicable, None);
         let page_timings_json = "{
-                                     \"onContentLoad\": null,
-                                     \"onLoad\": null
+                                     \"onContentLoad\": -1,
+                                     \"onLoad\": -1
                                  }";
         let page_timings_from_str: PageTimings = serde_json::from_str(page_timings_json).unwrap();
         assert_eq!(page_timings_from_str, page_timings );
@@ -1158,7 +1184,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\"
+                                  \"redirectURL\": \"\"
                               },
                               \"cache\": {
                                     \"beforeRequest\": null,
@@ -1257,7 +1283,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\"
+                                  \"redirectURL\": \"\"
                               },
                               \"cache\": {
                                     \"beforeRequest\": null,
@@ -1265,13 +1291,13 @@ mod test {
                               },
                               \"time\": 15,
                               \"timings\": {
-                                   \"blocked\": null,
-                                   \"dns\": null,
-                                   \"connect\": null,
+                                   \"blocked\": -1,
+                                   \"dns\": -1,
+                                   \"connect\": -1,
                                    \"send\": 4,
                                    \"wait\": 5,
                                    \"receive\": 6,
-                                   \"ssl\": null
+                                   \"ssl\": -1
                               }
                           }";
         let entry_from_str: Entry = serde_json::from_str(entry_json).unwrap();
@@ -1398,7 +1424,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectUrl\": \"\",
+                                \"redirectURL\": \"\",
                                 \"headersSize\" : 160,
                                 \"bodySize\" : 850,
                                 \"comment\" : \"\"
@@ -1432,7 +1458,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectUrl\": \"\"
+                                \"redirectURL\": \"\"
                             }";
         let response_from_str: Response = serde_json::from_str(response_json).unwrap();
         assert_eq!(response_from_str, response );
@@ -1711,7 +1737,6 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn test_cache_unknown_entries() {
         let cache = Cache::new(
             Unknown,
@@ -1801,13 +1826,13 @@ mod test {
             None
         );
         let timing_json = "{
-                                \"blocked\": null,
-                                \"dns\": null,
-                                \"connect\": null,
+                                \"blocked\": -1,
+                                \"dns\": -1,
+                                \"connect\": -1,
                                 \"send\": 4,
                                 \"wait\": 5,
                                 \"receive\": 6,
-                                \"ssl\": null
+                                \"ssl\": -1
                            }";
         let timing_from_str: Timing = serde_json::from_str(timing_json).unwrap();
         assert_eq!(timing_from_str, timing );
