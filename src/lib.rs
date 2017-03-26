@@ -653,38 +653,6 @@ pub enum CacheState {
     Unknown
 }
 
-/*
-use serde::de::{Deserialize, Deserializer, Visitor, Error};
-
-impl Deserialize for CacheState {
-    fn deserialize<D>(deserializer: D) -> Result<CacheState, D::Error>
-        where D: Deserializer
-    {
-        struct FieldVisitor;
-
-        impl Visitor for FieldVisitor {
-            type Value = CacheState;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-                formatter.write_str("empty, null or cache entry")
-            }
-
-            fn visit_str<E>(self, value: &str) -> Result<CacheState, E>
-                where E: Error
-            {
-                match value {
-                    "" => Ok(CacheState::Absent),
-                    "null" => Ok(CacheState::Unknown),
-                    _ => Err(E::syntax(&format!("Unexpected field: {}", value))),
-                }
-            }
-        }
-
-        deserializer.deserialize_struct_field(FieldVisitor)
-    }
-}
-*/
-
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CacheEntry {
@@ -967,8 +935,8 @@ mod test {
                             ],
                             \"comment\": \"Comment\"
                         }";
-		let log_from_str: Log = serde_json::from_str(log_json).unwrap();
-        assert_eq!( log_from_str, log );
+        let log_from_str: Log = serde_json::from_str(log_json).unwrap();
+        assert_eq!(log_from_str, log);
     }
 
 
@@ -1761,8 +1729,8 @@ mod test {
         let cache_entry = CacheEntry::new(
             Some("2000-02-01T00:00:00.000Z".to_string()), 
             "2000-01-01T00:00:00.000Z".to_string(), 
-            "123456789".to_string(), 
-            42, 
+            "123456789".to_string(),
+            42,
             Some("Comment".to_string())
         );
         let cache_entry_json = "{
@@ -1781,10 +1749,10 @@ mod test {
         let cache_entry = CacheEntry::new(
             None, 
             "2000-01-01T00:00:00.000Z".to_string(), 
-            "123456789".to_string(), 
-            42, 
+            "123456789".to_string(),
+            42,
             None
-        );         
+        );
         let cache_entry_json = "{
                                     \"lastAccess\": \"2000-01-01T00:00:00.000Z\",
                                     \"eTag\": \"123456789\",
