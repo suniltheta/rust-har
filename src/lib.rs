@@ -618,10 +618,12 @@ impl Content {
 pub struct Cache {
     /// State of a cache entry before the request.
     /// Leave out this field if the information is not available.
+    #[serde(default = "CacheState::unknown")]
     before_request: CacheState,
 
     /// State of a cache entry after the request.
     /// Leave out this field if the information is not available.
+    #[serde(default = "CacheState::unknown")]
     after_request: CacheState,
 
     comment: Option<String>
@@ -652,6 +654,9 @@ pub enum CacheState {
     Absent,
     Present(CacheEntry),
     Unknown
+}
+impl CacheState {
+    fn unknown() -> Self { CacheState::Unknown }
 }
 
 /*
@@ -1744,7 +1749,6 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn test_cache_unknown_entries() {
         let cache = Cache::new(
             Unknown,
