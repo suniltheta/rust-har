@@ -332,6 +332,7 @@ pub struct Response {
     content: Content,
 
     /// Redirection target URL from the Location response header.
+    #[serde(rename = "redirectURL")]
     redirect_url: String,
 
     /// Total number of bytes from the start of the HTTP response message until (and including) the
@@ -945,7 +946,7 @@ mod test {
                                             \"size\": 100,
                                             \"mimeType\": \"text/html; charset=utf8\"
                                         },
-                                        \"redirectUrl\": \"\",
+                                        \"redirectURL\": \"\",
                                         \"headersSize\": null,
                                         \"bodySize\": null
                                     },
@@ -1190,7 +1191,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\"
+                                  \"redirectURL\": \"\"
                               },
                               \"cache\": {
                                     \"beforeRequest\": null,
@@ -1289,7 +1290,7 @@ mod test {
                                       \"size\": 100,
                                       \"mimeType\": \"text/html; charset=utf8\"
                                   },
-                                  \"redirectUrl\": \"\"
+                                  \"redirectURL\": \"\"
                               },
                               \"cache\": {
                                     \"beforeRequest\": null,
@@ -1430,7 +1431,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectUrl\": \"\",
+                                \"redirectURL\": \"\",
                                 \"headersSize\" : 160,
                                 \"bodySize\" : 850,
                                 \"comment\" : \"\"
@@ -1464,7 +1465,7 @@ mod test {
                                     \"size\": 100,
                                     \"mimeType\": \"text/html; charset=utf8\"
                                 },
-                                \"redirectUrl\": \"\"
+                                \"redirectURL\": \"\"
                             }";
         let response_from_str: Response = serde_json::from_str(response_json).unwrap();
         assert_eq!(response_from_str, response );
