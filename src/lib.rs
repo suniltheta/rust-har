@@ -68,36 +68,6 @@ impl Log {
     }
 }
 
-<<<<<<< HEAD
-impl Encodable for Log {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Log", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("version", Box::new(self.version.to_string())));
-            fields.push(("creator", Box::new(&self.creator)));
-            match self.browser {
-                Some(ref browser) => fields.push(("browser", Box::new(browser))),
-                None => ()
-            }
-            match self.pages {
-                Some(ref pages) => fields.push(("pages", Box::new(pages.as_slice()))),
-                None => ()
-            }
-            fields.push(("entries", Box::new(self.entries.as_slice())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-    }
-}
-
-=======
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 /// This object contains information about the log creator application.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -107,23 +77,6 @@ pub struct Creator {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Creator {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Creator", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            fields.push(("version", Box::new(self.version.to_string())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Creator {
     pub fn new(name: String, version: String, comment: Option<String>) -> Creator{
         Creator {
@@ -131,7 +84,6 @@ impl Creator {
             version: version,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -154,28 +106,6 @@ impl Browser {
     }
 }
 
-<<<<<<< HEAD
-impl Encodable for Browser {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Browser", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            fields.push(("version", Box::new(self.version.to_string())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-    }
-}
-
-
-=======
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 /// This object represents list of exported pages.
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -209,30 +139,6 @@ impl Page {
     }
 }
 
-<<<<<<< HEAD
-impl Encodable for Page {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Page", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
-            fields.push(("id", Box::new(self.id.to_string())));
-            fields.push(("title", Box::new(self.title.to_string())));
-            fields.push(("pageTimings", Box::new(&self.page_timings)));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-    }
-}
-
-
-=======
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 /// This object describes timings for various events (states) fired during the page load.
 ///
 /// All times are specified in milliseconds.
@@ -268,27 +174,6 @@ impl PageTimings {
     }
 }
 
-<<<<<<< HEAD
-impl Encodable for PageTimings {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("PageTimings", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("onContentLoad", Box::new(self.on_content_load)));
-            fields.push(("onLoad", Box::new(self.on_load)));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-    }
-}
-
-=======
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 /// This object represents an array with all exported HTTP requests. Sorting entries by
 /// startedDateTime (starting from the oldest) is preferred way how to export data since it can
 /// make importing faster. However the reader application should always make sure the array is
@@ -334,52 +219,6 @@ pub struct Entry {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Entry {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        use OptionalTiming::{TimedContent,NotApplicable};
-        encoder.emit_struct("Entry", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            match self.pageref {
-                Some(ref pageref) => fields.push(("pageref", Box::new(pageref.to_string()))),
-                None => ()
-            }
-            fields.push(("startedDateTime", Box::new(self.started_date_time.to_string())));
-            let mut time = (self.timings.send + self.timings.wait + self.timings.receive) as usize;
-            for timing in vec![self.timings.blocked,
-                               self.timings.dns,
-                               self.timings.connect,
-                               self.timings.ssl].iter() {
-                time += match *timing {
-                    TimedContent(time) => time,
-                    NotApplicable => 0us
-                }
-            }
-            fields.push(("time", Box::new(time)));
-            fields.push(("request", Box::new(&self.request)));
-            fields.push(("response", Box::new(&self.response)));
-            fields.push(("cache", Box::new(&self.cache)));
-            fields.push(("timings", Box::new(&self.timings)));
-            match self.server_ip_address {
-                Some(ref server_ip_address) =>
-                    fields.push(("serverIPAddress", Box::new(server_ip_address.to_string()))),
-                None => ()
-            }
-            match self.connection {
-                Some(ref connection) =>
-                    fields.push(("connection", Box::new(connection.to_string()))),
-                None => ()
-            }
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Entry {
     pub fn new(
         pageref: Option<String>,
@@ -403,7 +242,6 @@ impl Entry {
             connection: connection,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -435,52 +273,16 @@ pub struct Request {
     /// Total number of bytes from the start of the HTTP request message until (and including)
     /// the double CRLF before the body.
     /// Set to -1 if the info is not available.
-<<<<<<< HEAD
-    headers_size: Option<isize>,
-
-    /// Size of the request body (POST data payload) in bytes.
-    /// Set to -1 if the info is not available.
-    body_size: Option<isize>,
-=======
     headers_size: Option<i32>,
 
     /// Size of the request body (POST data payload) in bytes.
     /// Set to -1 if the info is not available.
     body_size: Option<i32>,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// A comment provided by the user or the application.
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Request {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Request", 0, |encoder| {
-            let default_isize = -1is;
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("method", Box::new(self.method.to_string())));
-            fields.push(("url", Box::new(self.url.to_string())));
-            fields.push(("httpVersion", Box::new(self.http_version.to_string())));
-            fields.push(("cookies", Box::new(self.cookies.as_slice())));
-            fields.push(("headers", Box::new(self.headers.as_slice())));
-            fields.push(("queryString", Box::new(self.query_string.as_slice())));
-            match self.post_data {
-                Some(ref post_data) => fields.push(("postData", Box::new(post_data))),
-                None => ()
-            }
-            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_isize))));
-            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_isize))));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Request {
     pub fn new(
         method: String,
@@ -506,7 +308,6 @@ impl Request {
             body_size: body_size,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -515,11 +316,7 @@ impl Request {
 #[serde(rename_all = "camelCase")]
 pub struct Response {
     /// Response status.
-<<<<<<< HEAD
-    status: isize,
-=======
     status: i32,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// Response status description.
     status_text: String,
@@ -546,50 +343,17 @@ pub struct Response {
     /// The size of received response-headers is computed only from headers that are really
     /// received from the server. Additional headers appended by the browser are not included in
     /// this number, but they appear in the list of header objects.
-<<<<<<< HEAD
-    headers_size: Option<isize>,
-=======
     headers_size: Option<i32>,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// Size of the received response body in bytes.
     /// Set to zero in case of responses coming from the cache (304).
     /// Set to -1 if the info is not available.
-<<<<<<< HEAD
-    body_size: Option<isize>,
-=======
     body_size: Option<i32>,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// A comment provided by the user or the application.
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Response {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Response", 0, |encoder| {
-            let default_isize = -1is;
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("status", Box::new(self.status)));
-            fields.push(("statusText", Box::new(self.status_text.to_string())));
-            fields.push(("httpVersion", Box::new(self.http_version.to_string())));
-            fields.push(("cookies", Box::new(self.cookies.as_slice())));
-            fields.push(("headers", Box::new(self.headers.as_slice())));
-            fields.push(("content", Box::new(&self.content)));
-            fields.push(("redirectURL", Box::new(self.redirect_url.to_string())));
-            fields.push(("headersSize", Box::new(self.headers_size.unwrap_or(default_isize))));
-            fields.push(("bodySize", Box::new(self.body_size.unwrap_or(default_isize))));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Response {
     pub fn new(
         status: i32,
@@ -615,7 +379,6 @@ impl Response {
             body_size: body_size,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -649,43 +412,6 @@ pub struct Cookie {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Cookie {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Cookie", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            fields.push(("value", Box::new(self.value.to_string())));
-            match self.path {
-                Some(ref path) => fields.push(("path", Box::new(path.to_string()))),
-                None => ()
-            }
-            match self.domain {
-                Some(ref domain) => fields.push(("domain", Box::new(domain.to_string()))),
-                None => ()
-            }
-            match self.expires {
-                Some(ref expires) => fields.push(("expires", Box::new(expires.to_string()))),
-                None => ()
-            }
-            match self.http_only {
-                Some(ref http_only) => fields.push(("httpOnly", Box::new(http_only))),
-                None => ()
-            }
-            match self.secure {
-                Some(ref secure) => fields.push(("secure", Box::new(secure))),
-                None => ()
-            }
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Cookie {
     pub fn new(
         name: String,
@@ -707,7 +433,6 @@ impl Cookie {
             secure: secure,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -721,23 +446,6 @@ pub struct Header {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Header {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Header", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            fields.push(("value", Box::new(self.value.to_string())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Header {
     pub fn new(
         name: String,
@@ -749,7 +457,6 @@ impl Header {
             value: value,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -764,23 +471,6 @@ pub struct QueryStringPair {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for QueryStringPair {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("QueryStringPair", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            fields.push(("value", Box::new(self.value.to_string())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl QueryStringPair {
     pub fn new(
         name: String,
@@ -792,7 +482,6 @@ impl QueryStringPair {
             value: value,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -814,24 +503,6 @@ pub struct PostData {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for PostData {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("PostData", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("mimeType", Box::new(self.mime_type.to_string())));
-            fields.push(("params", Box::new(self.params.as_slice())));
-            fields.push(("text", Box::new(self.text.to_string())));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl PostData {
     pub fn new(
         mime_type: String,
@@ -845,7 +516,6 @@ impl PostData {
             text: text,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -869,35 +539,6 @@ pub struct Param {
     comment: Option<String>,
 }
 
-<<<<<<< HEAD
-impl Encodable for Param {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Param", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("name", Box::new(self.name.to_string())));
-            match self.value {
-                Some(ref value) => fields.push(("value", Box::new(value.to_string()))),
-                None => ()
-            }
-            match self.file_name {
-                Some(ref file_name) => fields.push(("fileName", Box::new(file_name.to_string()))),
-                None => ()
-            }
-            match self.content_type {
-                Some(ref content_type) =>
-                    fields.push(("contentType", Box::new(content_type.to_string()))),
-                None => ()
-            }
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Param {
     pub fn new(
         name: String,
@@ -913,7 +554,6 @@ impl Param {
             content_type: content_type,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -929,17 +569,10 @@ pub struct Content {
     /// Length of the returned content in bytes.
     /// Should be equal to response.bodySize if there is no compression and bigger when the content
     /// has been compressed.
-<<<<<<< HEAD
-    size: isize,
-
-    /// Number of bytes saved. Leave out this field if the information is not available.
-    compression: Option<isize>,
-=======
     size: i32,
 
     /// Number of bytes saved. Leave out this field if the information is not available.
     compression: Option<i32>,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// MIME type of the response text (value of the Content-Type response header).
     /// The charset attribute of the MIME type is included (if available).
@@ -961,35 +594,6 @@ pub struct Content {
     comment: Option<String>,
 }
 
-<<<<<<< HEAD
-impl Encodable for Content {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Content", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("size", Box::new(self.size)));
-            match self.compression {
-                Some(ref compression) => fields.push(("compression", Box::new(compression))),
-                None => ()
-            }
-            fields.push(("mimeType", Box::new(self.mime_type.to_string())));
-            match self.text {
-                Some(ref text) => fields.push(("text", Box::new(text))),
-                None => ()
-            }
-            match self.encoding {
-                Some(ref encoding) => fields.push(("encoding", Box::new(encoding))),
-                None => ()
-            }
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Content {
     pub fn new(
         size: i32,
@@ -1007,7 +611,6 @@ impl Content {
             encoding: encoding,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -1028,36 +631,6 @@ pub struct Cache {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Cache {
-
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        use CacheState::{Absent,Present,Unknown};
-        encoder.emit_struct("Cache", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            match self.before_request {
-                Absent => fields.push(("beforeRequest", Box::new(None::<CacheEntry>))),
-                Present(ref before_request) =>
-                    fields.push(("beforeRequest", Box::new(before_request))),
-                Unknown => ()
-            }
-            match self.after_request {
-                Absent => fields.push(("afterRequest", Box::new(None::<CacheEntry>))),
-                Present(ref after_request) =>
-                    fields.push(("afterRequest", Box::new(after_request))),
-                Unknown => ()
-            }
-            match self.comment {
-                Some(ref comment) =>
-                    fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Cache {
     pub fn new(
         before_request: CacheState,
@@ -1069,7 +642,6 @@ impl Cache {
             after_request: after_request,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -1104,38 +676,12 @@ pub struct CacheEntry {
     e_tag: String,
 
     /// The number of times the cache entry has been opened.
-<<<<<<< HEAD
-    hit_count: isize,
-=======
     hit_count: i32,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// (new in 1.2) A comment provided by the user or the application.
     comment: Option<String>,
 }
 
-<<<<<<< HEAD
-impl Encodable for CacheEntry {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("CacheEntry", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            match self.expires {
-                Some(ref expires) => fields.push(("expires", Box::new(expires.to_string()))),
-                None => ()
-            }
-            fields.push(("lastAccess", Box::new(self.last_access.to_string())));
-            fields.push(("eTag", Box::new(self.e_tag.to_string())));
-            fields.push(("hitCount", Box::new(self.hit_count)));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl CacheEntry {
     pub fn new(
         expires: Option<String>,
@@ -1151,7 +697,6 @@ impl CacheEntry {
             hit_count: hit_count,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -1162,23 +707,6 @@ impl CacheEntry {
 #[serde(rename_all = "camelCase")]
 #[serde(untagged)]
 pub enum OptionalTiming {
-<<<<<<< HEAD
-    TimedContent(usize),
-    NotApplicable
-}
-
-impl Encodable for OptionalTiming {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        use OptionalTiming::{TimedContent,NotApplicable};
-
-        let default_isize = -1is;
-        let value = match *self {
-            TimedContent(value) => value as isize,
-            NotApplicable => default_isize
-        };
-        try!(encoder.emit_isize(value));
-        Ok(())
-=======
     TimedContent(u32),
     NotApplicable
 }
@@ -1196,7 +724,6 @@ impl Deserialize for OptionalTiming {
 	            Ok(OptionalTiming::NotApplicable),
             _ => Err(serde::de::Error::custom("Unexpected value")),
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 
@@ -1207,7 +734,7 @@ impl Deserialize for OptionalTiming {
 ///
 /// An exporting tool can omit the blocked, dns, connect and ssl, timings on every request if it is
 /// unable to provide them. Tools that can provide these timings can set their values to -1 if they
-/// don't apply. For example, connect would be -1 for requests which re-use an existing connection.
+/// don’t apply. For example, connect would be -1 for requests which re-use an existing connection.
 ///
 /// The time value for the request must be equal to the sum of the timings supplied in this section
 /// (excluding any -1 values).
@@ -1232,15 +759,6 @@ pub struct Timing {
     connect: OptionalTiming,
 
     /// Time required to send HTTP request to the server.
-<<<<<<< HEAD
-    send: usize,
-
-    /// Waiting for a response from the server.
-    wait: usize,
-
-    /// Time required to read entire response from the server (or cache).
-    receive: usize,
-=======
     send: u32,
 
     /// Waiting for a response from the server.
@@ -1248,7 +766,6 @@ pub struct Timing {
 
     /// Time required to read entire response from the server (or cache).
     receive: u32,
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
 
     /// Time required for SSL/TLS negotiation.
     /// If this field is defined then the time is also included in the connect field (to ensure
@@ -1260,28 +777,6 @@ pub struct Timing {
     comment: Option<String>
 }
 
-<<<<<<< HEAD
-impl Encodable for Timing {
-    fn encode<S: Encoder>(&self, encoder: &mut S) -> Result<(), S::Error> {
-        encoder.emit_struct("Timing", 0, |encoder| {
-            let mut fields: Vec<(&str, Box<Encodable>)> = Vec::new();
-            fields.push(("blocked", Box::new(self.blocked)));
-            fields.push(("dns", Box::new(self.dns)));
-            fields.push(("connect", Box::new(self.connect)));
-            fields.push(("send", Box::new(self.send)));
-            fields.push(("wait", Box::new(self.wait)));
-            fields.push(("receive", Box::new(self.receive)));
-            fields.push(("ssl", Box::new(self.ssl)));
-            match self.comment {
-                Some(ref comment) => fields.push(("comment", Box::new(comment.to_string()))),
-                None => ()
-            }
-            for (idx, &(name, ref value)) in fields.iter().enumerate() {
-                try!(encoder.emit_struct_field(name, idx, |encoder| (**value).encode(encoder)));
-            }
-            Ok(())
-        })
-=======
 impl Timing {
     pub fn new(
         blocked: OptionalTiming,
@@ -1303,7 +798,6 @@ impl Timing {
             ssl: ssl,
             comment: comment
         }
->>>>>>> 553f592fe4180d0c73d33a610bbe139c23a8b0bc
     }
 }
 

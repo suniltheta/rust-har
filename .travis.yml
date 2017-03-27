@@ -7,7 +7,6 @@ rust:
 os:
   - linux
 
-
 notifications:
   webhooks: http://build.servo.org:54856/travis
 
