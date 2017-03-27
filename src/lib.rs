@@ -717,10 +717,9 @@ impl Deserialize for OptionalTiming {
     {
         let deser_result: serde_json::Value = try!(serde::Deserialize::deserialize(deserializer));
         match deser_result {
-            //serde_json::Value::Number(n) => Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
-            serde_json::Value::Number(ref n) if n.as_i64().unwrap() >= 0 as i64 => 
+            serde_json::Value::Number(ref n) if n.as_i64().unwrap() >= 0 => 
 	            Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
-            serde_json::Value::Number(ref n) if n.as_i64().unwrap() == -1 as i64 => 
+            serde_json::Value::Number(ref n) if n.as_i64().unwrap() == -1 => 
 	            Ok(OptionalTiming::NotApplicable),
             _ => Err(serde::de::Error::custom("Unexpected value")),
         }
@@ -1054,6 +1053,30 @@ mod test {
                              \"pageTimings\": {
                                  \"onContentLoad\": -1,
                                  \"onLoad\": -1
+                             },
+                             \"comment\": \"Comment\"
+                         }";
+        let page_from_str: Page = serde_json::from_str(page_json).unwrap();
+        assert_eq!( page_from_str, page );
+    }
+    
+    #[test]
+    #[should_panic(expected = "Unexpected value")]
+    fn test_page_float() {
+        let page = Page::new(
+            "2009-04-16T12:07:25.123+01:00".to_string(),
+            "page_0".to_string(),
+            "Test Page".to_string(),
+            PageTimings::new(NotApplicable, NotApplicable, None),
+            Some("Comment".to_string())
+        );
+        let page_json = "{
+                             \"startedDateTime\": \"2009-04-16T12:07:25.123+01:00\",
+                             \"id\": \"page_0\",
+                             \"title\": \"Test Page\",
+                             \"pageTimings\": {
+                                 \"onContentLoad\": 5.3,
+                                 \"onLoad\": -5.3
                              },
                              \"comment\": \"Comment\"
                          }";
