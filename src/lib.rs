@@ -5,7 +5,6 @@
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
 extern crate serde_json;
 
 use serde::de::{Deserialize, Deserializer};
@@ -717,15 +716,15 @@ impl Deserialize for OptionalTiming {
     {
         let deser_result: serde_json::Value = try!(serde::Deserialize::deserialize(deserializer));
         match deser_result {
-            //serde_json::Value::Number(n) => Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
-            serde_json::Value::Number(ref n) if n.as_i64().unwrap() >= 0 as i64 => 
+            serde_json::Value::Number(ref n) if n.as_i64().is_some() && n.as_i64().unwrap() >= 0 => 
 	            Ok(OptionalTiming::TimedContent(n.as_u64().unwrap() as u32)),
-            serde_json::Value::Number(ref n) if n.as_i64().unwrap() == -1 as i64 => 
+            serde_json::Value::Number(ref n) if n.as_i64().is_some() && n.as_i64().unwrap() == -1 => 
 	            Ok(OptionalTiming::NotApplicable),
             _ => Err(serde::de::Error::custom("Unexpected value")),
         }
     }
 }
+
 
 /// This object describes various phases within request-response round trip. All times are
 /// specified in milliseconds.
@@ -1095,6 +1094,17 @@ mod test {
                                  }";
         let page_timings_from_str: PageTimings = serde_json::from_str(page_timings_json).unwrap();
         assert_eq!(page_timings_from_str, page_timings );
+    }
+
+    #[test]
+    fn test_page_timings_float() {
+        let page_timings_json = "{
+                                     \"onContentLoad\": -6.3,
+                                     \"onLoad\": 6.3,
+                                     \"comment\": \"Comment\"
+                                 }";
+        let page_timings_result: Result<PageTimings, serde_json::Error> = serde_json::from_str(page_timings_json);
+        assert!(page_timings_result.is_err());
     }
 
     #[test]
