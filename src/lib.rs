@@ -5,7 +5,6 @@
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
 extern crate serde_json;
 
 use serde::de::{Deserialize, Deserializer};
@@ -1098,18 +1097,14 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected = "Unexpected value")]
     fn test_page_timings_float() {
-        let page_timings = PageTimings::new(NotApplicable,
-                                            NotApplicable,
-                                            Some("Comment".to_string()));
         let page_timings_json = "{
                                      \"onContentLoad\": -6.3,
                                      \"onLoad\": 6.3,
                                      \"comment\": \"Comment\"
                                  }";
-        let page_timings_from_str: PageTimings = serde_json::from_str(page_timings_json).unwrap();
-        assert_eq!(page_timings_from_str, page_timings );
+        let page_timings: Result<PageTimings, serde_json::Error> = serde_json::from_str(page_timings_json);
+        assert!(page_timings.is_err());
     }
 
     #[test]
